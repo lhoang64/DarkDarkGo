@@ -120,30 +120,33 @@
     ```
     [
        {
-          "word":"global",
-          "chunk_ID":"40ddb9f5-f387-4aed-a37b-b53c2f109040",
+          "word":"open system",
+          "chunk_ID":"b356063a-3234-4b60-a19c-3d50c160dfd6",
+          "word_count":60,
           "entry_ID":[
-             "2d9b4f7d-d7f8-4fef-ae47-2d9dc56b5bd4",
-             "03ad7b8b-1a88-42f1-b42e-90e1c0321773",
-             "ee91d4dc-d294-4191-8fbf-c8a2c2d18dbd"
+             "f4aa090b-b200-4956-9350-bcbad04b969d",
+             "9d380e2c-3394-438d-a8d0-d46d652ac732",
+             "7b2d3819-d0c8-4e7c-83f0-e434b3199af2"
           ]
        },
        {
-          "word":"Polarised",
-          "chunk_ID":"c40acae9-ac18-43da-8e5e-60e50e7b507c",
+          "word":"local",
+          "chunk_ID":"a6335332-a679-44fc-ae47-c9eff963905e",
+          "word_count":43,
           "entry_ID":[
-             "207e7883-c842-43fe-8675-0f6e11608572",
-             "ca43a5fa-e697-43bd-b84f-63aa4cd9292a",
-             "d71d76fb-e6ec-46f5-a53b-d51f8500f02b"
+             "627bf7cf-4b99-4c6f-8887-63e1257bf55e",
+             "89d0d0a6-03d2-4c34-adc8-e2dccf574359",
+             "ebbdf83f-3a3c-41e6-b063-dfb11e343e53"
           ]
        },
        {
-          "word":"explicit",
-          "chunk_ID":"d2e5bb51-6bf8-4f7b-b341-8dc90e85d43e",
+          "word":"Synchronised",
+          "chunk_ID":"1ee756c1-274b-4d90-a8b2-84aa5a584c9e",
+          "word_count":65,
           "entry_ID":[
-             "7d0c7a96-19d2-46c2-8b61-1cf23c5dbb8d",
-             "341028f2-d09b-434e-9625-6fd0ce930930",
-             "ac3e9c36-ffab-4e25-b0f5-49377badd4d2"
+             "b6c68d31-8ce1-4ea7-8b8a-c84188084d07",
+             "f80eb544-6548-42d4-a814-2f80eeb0088b",
+             "0a79a97d-d5c7-4956-9aae-fae04b9a45ba"
           ]
        }
     ]
