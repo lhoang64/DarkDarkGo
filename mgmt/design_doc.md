@@ -5,15 +5,14 @@
 ### Crawer
 
 #### Seeds 
-- Crawler asks MGMT for seed or lists of seeds with
-    `/get_seed`
+- Crawler asks MGMT for seed with `/get_seed`
     ```
     {   
         "link":"http://goo.ne.jp/massa.xml",
         "state":"pending"
     }
     ```
-    `/get_seeds?n`
+    or lists of seeds with `/get_seeds?n`
     ```
     [  
        {  
@@ -31,8 +30,7 @@
     ]
     ```
 - When Crawler receives these, it sends back seeds' stats where it updates states
-of seeds. It can also update seed stats frequently for MGMT.
-    `/update_seed_stats`
+of seeds. It can also update seed stats frequently for MGMT with `/update_seed_stats`
     ```
     [  
        {  
@@ -49,19 +47,18 @@ of seeds. It can also update seed stats frequently for MGMT.
        }
     ]
     ```
-- The seed can be in 4 states. It depends on how Crawler handles it and update to MGMT.
+- The seed can be in 4 states. It depends on how Crawler handles it and updates to MGMT.
   - pending
   - crawling
   - crawled
   - propagated
 - One way MGMT can do is to have a database of all seeds with their state. MGMT updates the database
 according to the changes that Crawler sends. Or MGMT can have different data structure for different states:
-a queue for pending seeds, sets for crawling, crawled, propagated. The goal is to make sure that all seeds go
+a queue for pending seeds, sets for crawling, crawled, propagated seeds. The goal is to make sure that all seeds go
 through all states. 
 
 #### Content chunk
-- Crawler can also send MGMT content chunk metadata with stats: IP, Port of the machine and state.
-    `/add_chunk_metadata`
+- Crawler can also send MGMT content chunk metadata with stats: IP, Port of the machine and state with `/add_chunk_metadata`
     ```
     [
        {
@@ -87,8 +84,7 @@ through all states.
 - Same as seed, content chunk also have state: crawling, crawled and propagated.
 
 ### Index Builder
-- Index Builder gets chunk metadata from MGMT and uses that to look for Crawler's content database.
-    `/get_chunk_metadata`
+- Index Builder gets chunk metadata from MGMT and uses that to look for Crawler's content database with `/get_chunk_metadata`
     ```
     [
        {
@@ -111,8 +107,7 @@ through all states.
        }
     ]
     ```
-- Index Builder builds to index chunk and sends back to MGMT.
-    `/add_index_chunk`
+- Index Builder builds to index chunk and sends back to MGMT with `/add_index_chunk`
     ```
     [
        {
@@ -149,8 +144,7 @@ through all states.
     ```
 
 ### Index Server
-- Index Server sends querying stats to MGMT.
-    `/add_query_stats`
+- Index Server sends querying stats to MGMT with `/add_query_stats`
     ```
     [
        {
@@ -181,4 +175,53 @@ through all states.
     ```
 
 ### UI
-- UI Team asks MGMT for servers map periodically. 
+- UI Team asks MGMT for servers map periodically with `/get_servers_map`
+    ```
+    [
+       {
+          "row_number":1,
+          "hosts":{
+             "IP":[
+                "79.54.92.235",
+                "51.1.38.174",
+                "13.134.94.217"
+             ],
+             "port":[
+                1248,
+                3842,
+                302
+             ]
+          }
+       },
+       {
+          "row_number":2,
+          "hosts":{
+             "IP":[
+                "253.94.42.30",
+                "194.21.48.83",
+                "165.69.123.81"
+             ],
+             "port":[
+                241,
+                4800,
+                3078
+             ]
+          }
+       },
+       {
+          "row_number":3,
+          "hosts":{
+             "IP":[
+                "185.166.126.242",
+                "102.199.242.146",
+                "245.86.27.171"
+             ],
+             "port":[
+                2636,
+                3051,
+                919
+             ]
+          }
+       }
+    ]
+    ```
