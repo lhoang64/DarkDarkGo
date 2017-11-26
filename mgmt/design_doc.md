@@ -5,7 +5,7 @@
 ### Crawer
 
 #### Seeds 
-- Crawler asks MGMT for seed or lists of seeds with  or 
+- Crawler asks MGMT for seed or lists of seeds with
     `/get_seed`
     ```
     {   
