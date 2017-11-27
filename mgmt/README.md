@@ -89,26 +89,27 @@
     ```
 
 ### Indexers
-**Pull content chunk metadata.**
-- URL: `/get_content_chunk`
-- Method: `GET`
+**Add content chunk stats.**
+- URL: `/add_content_chunk_stats`
+- Method: `POST`
 - Sample data:
     ```
     [
        {
-          "ID":"bd6146c0-315f-4f67-89ad-1576dc13b701",
+          "chunk_ID":"bd6146c0-315f-4f67-89ad-1576dc13b701",
           "IP":"63.161.242.61",
-          "port":9000
+          "port":9000,
+          "state":"building"
        },
        {
-          "ID":"a043738c-3458-416d-99ad-99ea1b318468",
+          "chunk_ID":"a043738c-3458-416d-99ad-99ea1b318468",
           "IP":"99.128.93.49",
-          "port":9001
+          "state":"building"
        },
        {
-          "ID":"a7e738b4-a134-4144-9cf9-0b02400d5bd4",
+          "chunk_ID":"a7e738b4-a134-4144-9cf9-0b02400d5bd4",
           "IP":"138.76.103.233",
-          "port":9002
+          "state":"building"
        }
     ]
     ```
@@ -151,7 +152,7 @@
        }
     ]
     ```
-
+n
 **Send stats related to query. Used by index query servers.**
 - URL: `/add_query_stats`
 - Method: `POST`
