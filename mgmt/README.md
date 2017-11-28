@@ -1,41 +1,33 @@
 # MGMT
 
-## Our APIs
+## APIs
 
 ### Crawlers
 
-**Pull a link from the top of the queue.**
-- URL: `/get_link`
-- Method: `GET`
-- Sample data
+**Send state when wakes up.**
+- URL: `/send_state`
+- Method: `POST`
+- Description: States `[ online | error | waiting | paused ]`
+- Sample data:
     ```
-    {"link":"http://goo.ne.jp/massa.xml"}
+    {  
+        "state":"online"
+    }
     ```
 
-**Pull n links from the queue.**
-- URL: `/get_links?n`
+**Pull links from the queue.**
+- URL: `/get_links`
 - Method: `GET`
 - Sample data:
     ```
-    [  
-       {  
-          "link":"https://vinaora.com/at/vulputate/vitae/nisl/aenean/lectus/pellentesque.js"
-       },
-       {  
-          "link":"https://google.fr/massa.js"
-       },
-       {  
-          "link":"http://bing.com/nec/sem.js"
-       }
-    ]
-    ```
-    
-**Add a link to the queue.**
-- URL: `/add_link`
-- Method: `POST`
-- Sample data
-    ```
-    {"link":"http://goo.ne.jp/massa.xml"}
+    {  
+       "chunk_ID":1,
+       "links":[  
+          "https://vinaora.com/at/vulputate/vitae",
+          "https://google.fr/massa.js",
+          "http://bing.com/nec/sem.js"
+       ]
+    }
     ```
     
 **Add some number of links to the queue.**
@@ -43,25 +35,31 @@
 - Method: `POST`
 - Sample data:
     ```
-    [  
-       {  
-          "link":"https://vinaora.com/at/vulputate/vitae/nisl/aenean/lectus/pellentesque.js"
-       },
-       {  
-          "link":"https://google.fr/massa.js"
-       },
-       {  
-          "link":"http://bing.com/nec/sem.js"
-       }
-    ]
+    {  
+       "links":[  
+          "http://bing1.com/nec/sem.js",
+          "http://bing2.com/nec/sem.js",
+          "http://bing3.com/nec/sem.js",
+          "http://bing4.com/nec/sem.js",
+          "http://bing5.com/nec/sem.js",
+          "http://bing6.com/nec/sem.js",
+          "http://bing7.com/nec/sem.js",
+          "http://bing8.com/nec/sem.js",
+          "http://bing9.com/nec/sem.js",
+          "http://bing10.com/nec/sem.js",
+       ]
+    }
     ```
 
 **Mark a link as already scraped.**
 - URL: `/add_crawled_link`
-- Method: `POST`
+-    {"link":"http://goo.ne.jp/massa.xml"}
+ Method: `POST`
 - Sample data:
     ```
-    {"link":"http://goo.ne.jp/massa.xml"}
+    {  
+        "link":"http://goo.ne.jp/massa.xml"
+    }
     ```
 
 **Add content chunk metadata.**
