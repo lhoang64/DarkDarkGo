@@ -11,4 +11,4 @@ When my computer is online, browse the project in dev mode at:
 
 
 ### Credits ###
-DarkDarkGo Logo : sugar skull by Jocelyn from the Noun Project
+DarkDarkGo Logo : [sugar skull](https://thenounproject.com/term/sugar-skull/1089582) by Jocelyn from [the Noun Project](https://thenounproject.com/)
