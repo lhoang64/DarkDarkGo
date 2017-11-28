@@ -3,7 +3,12 @@ When my computer is online, browse the project in dev mode at:
 
 ## Build locally in dev mode ##
 `npm update`
+
 `npm start`
 
 ## Build for production ##
 `npm build`
+
+
+### Credits ###
+DarkDarkGo Logo : sugar skull by Jocelyn from the Noun Project
