@@ -8,6 +8,7 @@ from collections import namedtuple
 
 Host = namedtuple('Host', 'ip port')
 
+
 def get_tor_session(port):
     """
     The python requests lib does not work nativly with tor, so we need to
@@ -26,6 +27,7 @@ def get_tor_session(port):
     session.proxies = proxies
 
     return session
+
 
 def get_requests_session():
     """

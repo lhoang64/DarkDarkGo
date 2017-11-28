@@ -6,6 +6,7 @@
         it's just a dummy until the server is up.
 """
 
+
 class DeviceManager:
 
     def __init__(self, dm_host):

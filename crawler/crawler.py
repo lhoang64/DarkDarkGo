@@ -10,8 +10,10 @@ from spider import Spider
 from mgmt import QueueWrapper, DeviceManager
 from util import get_tor_session
 
+
 class Crawler:
-    def __init__(self,
+    def __init__(
+            self,
             num_threads, # Number of thread with which to crawl.
             user_agent,  # User agent to include in requeset.
             queue_host,
@@ -34,9 +36,8 @@ class Crawler:
         self.chunk_id    = ''
         self.log = logging.getLogger()
 
-
         self._declare_online()
-         # TODO Create and start managment thread.
+        # TODO Create and start managment thread.
 
     def _declare_online(self):
         self._manager.alert_online()
@@ -80,4 +81,3 @@ class Crawler:
             fresh_links = [link for sublist in mulit_list for link in sublist]
             self._queue.add_links(fresh_links)
             self._manager.alert_chunk(chunk_id)
-

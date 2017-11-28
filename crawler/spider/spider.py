@@ -6,8 +6,10 @@
 
 from bs4 import BeautifulSoup
 
+
 class Spider:
-    def __init__(self,
+    def __init__(
+            self,
             link,
             user_agent,
             session

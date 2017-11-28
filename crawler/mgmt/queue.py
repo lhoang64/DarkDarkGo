@@ -6,6 +6,7 @@
         it's just a dummy until the server is up.
 """
 
+
 class QueueWrapper:
 
     def __init__(self, queue_host):
