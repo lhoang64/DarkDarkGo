@@ -8,9 +8,9 @@
 
 class QueueWrapper:
 
-    def __init__(self, queue_address):
-        self._address = queue_address.ip
-        self._port = queue_address.port
+    def __init__(self, queue_host):
+        self._address = queue_host.ip
+        self._port = queue_host.port
 
     def get_links(self):
         """

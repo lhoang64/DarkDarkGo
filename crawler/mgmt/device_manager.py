@@ -8,9 +8,9 @@
 
 class DeviceManager:
 
-    def __init__(self, dm_address):
-        self._address = dm_address.ip
-        self._port = dm_address.port
+    def __init__(self, dm_host):
+        self._address = dm_host.ip
+        self._port = dm_host.port
 
     def alert_online(self):
         """
@@ -49,5 +49,14 @@ class DeviceManager:
             finished.
         param: address  : Named Tuple containing our ip and the port to
             contact us on.
+        """
+        pass
+
+    def mark_link_crawled(link):
+        """
+        Alert's management that `link` has been crawled, and does not need to
+            be checked again. Uses the /add_crawled_link endpoint.
+
+        param: link : String containing the link which has been crawled.
         """
         pass
