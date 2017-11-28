@@ -53,8 +53,7 @@
 
 **Mark a link as already scraped.**
 - URL: `/add_crawled_link`
--    {"link":"http://goo.ne.jp/massa.xml"}
- Method: `POST`
+- Method: `POST`
 - Sample data:
     ```
     {  
@@ -150,7 +149,7 @@
        }
     ]
     ```
-n
+
 **Send stats related to query. Used by index query servers.**
 - URL: `/add_query_stats`
 - Method: `POST`
