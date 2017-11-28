@@ -1,5 +1,5 @@
 server {
     listen 80;
-    root /usr/src/advisorhub/build;
+    root /usr/src/search/build;
     index index.html;
 }
