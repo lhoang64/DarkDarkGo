@@ -31,7 +31,7 @@ class Chunk:
         with open(self.chunk_id, 'ab') as f:
             data = link + title + html
             bin_data = data.encode('utf-8')
-            doc_header = self.compute_doc_header(link, title, html)
+            doc_header = self.__compute_doc_header(link, title, html)
             for b_value in doc_header:
                 f.write(b_value)    # append document header to chunk
             f.write(bin_data)       # append document data to chunk
@@ -48,7 +48,7 @@ class Chunk:
                 f.write(header_value[0])    # append document_int_value
                 f.write(header_value[1])    # append document start offset
 
-    def compute_file_header_value(self, doc_int_value):
+    def __compute_file_header_value(self, doc_int_value):
         """
         Calculates the documents start offset. Document start = length of all content prior to document
         :param doc_int_value: 0-4 int value
