@@ -4,11 +4,13 @@
 """
 import logging
 from multiprocessing import Pool
+from threading import Event
 from time import sleep
 
-from spider import Spider
-from mgmt import QueueWrapper, DeviceManager
-from util import get_tor_session
+from spider.spider import Spider
+from mgmt.queue import QueueWrapper
+from mgmt.device_manager import DeviceManager
+from util.util import get_tor_session
 
 
 class Crawler:
@@ -31,10 +33,9 @@ class Crawler:
         self._queue      = QueueWrapper(queue_host)
         self._manager    = DeviceManager(dm_host)
 
-        self.running     = True
-        self.waiting     = False
         self.chunk_id    = ''
         self.log = logging.getLogger()
+        self.running = Event() # TODO Maybe wrap this?
 
         self._declare_online()
         # TODO Create and start managment thread.
@@ -65,14 +66,38 @@ class Crawler:
             self._manager.mark_link_crawled(link)
             return []
 
+    def stop():
+        """
+        Tells the thread to stop looping until start() is called.
+        """
+        self.running.clear()
+
+    def re_start():
+        """
+        Tells the thread that it should be running.
+        """
+        self.running.set()
+
+    def get_chunks(self):
+        """
+        Method to return a list of chunks stored on the crawler, lists all
+            chunks stored, including WIP chunks.
+
+        Returns: [chunk_id]
+        """
+        # TODO Impliment this.
+        pass
+
     def run(self):
-        self.running = True
-        while self.running:
+        # TODO Find a more robust way of starting/stopping and keeping track.
+        while self.running.wait():
             links, chunk_id = self._manager.get_links()
             self.chunk_id = chunk_id
             if not links:
-                self.running = True
-                sleep(60)
+                self.running.clear()
+                self.running.wait(60)
+                self.running.set()
+                continue
 
             # TODO Throttle this somehow.
             pool = Pool(self.num_threads)
