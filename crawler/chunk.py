@@ -48,7 +48,7 @@ class Chunk:
                 f.write(header_value[0])    # append document_int_value
                 f.write(header_value[1])    # append document start offset
 
-    def __compute_file_header_value(self, doc_int_value):
+    def compute_file_header_value(self, doc_int_value):
         """
         Calculates the documents start offset. Document start = length of all content prior to document
         :param doc_int_value: 0-4 int value
@@ -64,7 +64,7 @@ class Chunk:
         self.header.append(header_val)
         return self.header
 
-    def compute_doc_header(self, link, title, html):
+    def __compute_doc_header(self, link, title, html):
         """
         Calculates the document header, document header is a 14 byte long value that means:
         doc_length(2 bytes), doc_start_offset(2 bytes), link_start(2 bytes), link_length(1 byte), title_start(2 bytes),
