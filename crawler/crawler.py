@@ -41,8 +41,10 @@ class Crawler:
         # TODO Create and start managment thread.
 
     def _declare_online(self):
+        """
+        Sends management a request saying that we are online.
+        """
         self._manager.alert_online()
-        # TODO This may return something? We may need to do something with it.
 
     def _add_to_chunk(self, link, html):
         # TODO Impliment this once Linh makes the API available.

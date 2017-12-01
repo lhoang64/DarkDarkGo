@@ -56,6 +56,7 @@ def get_chunks():
 def get_chunk():
     # TODO We're going to have to wait until I can familiarize myself
     #    with the chunk API before doign this.
+    id = request.args.get('chunk_id', type=int)
     pass
 
 @app.route('/is_crawling')
