@@ -1,5 +1,6 @@
 const express = require('express');
 const routes = require('./api/routes');
+let Manager = require('./Management/Manager.js');
 
 let app = express();
 
@@ -13,6 +14,7 @@ app.use((req, res, next) => {
 
 routes(app);
 
-app.listen(port, ()=>{Manager(app)});
-
-console.log('Backend server active on port ' + port)
+app.listen(port, ()=>{
+    Manager.start(app);
+    console.log('Backend server active on port ' + port);
+});
