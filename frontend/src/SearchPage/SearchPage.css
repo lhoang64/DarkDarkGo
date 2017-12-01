@@ -1,3 +1,10 @@
 .whitetext{
     color: #fff;
 }
+
+.loader{
+    top: 55%;
+    left: 45%;
+    position: absolute;
+    color: rgb(242, 236, 236);
+}
