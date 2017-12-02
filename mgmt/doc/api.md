@@ -65,6 +65,17 @@
     }
     ```
 
+**Get unreplicated chunks**
+- URL: `/get_unreplicated_chunks`
+- Method: `GET`
+- Return: 5 chunks each request
+- Sample data:
+```
+    {
+        "chunks": [100, 101, 102]
+    }
+```
+
 ### Index Builder
 
 **Get content chunk metadata**
