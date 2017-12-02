@@ -156,7 +156,7 @@ When startup, `/set_component_state` to notify
 }
 ```
 
-Frond-End `/get_server_map` periodically
+Frond-End `/get_servers_map` periodically
 
 ```
 [
