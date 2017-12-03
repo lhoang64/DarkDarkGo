@@ -5,3 +5,5 @@ exports = Snippet = (id, title, href, desc) => {
     this.href = href
     this.desc = desc
 }
+
+Snippet.prototype.length = () => String(id).length + title.length + href.length + desc.length + 8
