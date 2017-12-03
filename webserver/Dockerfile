@@ -18,8 +18,12 @@ ADD . /usr/src/server
 
 WORKDIR /usr/src/server
 RUN npm install
+RUN npm install pm2 -g
 
 EXPOSE 80
+
+# For keymetrics
+EXPOSE 43554
 
 ENTRYPOINT ["bash", "start.sh"]
 
