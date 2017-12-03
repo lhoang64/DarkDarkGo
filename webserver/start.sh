@@ -1,4 +1,2 @@
-NODE_PORT=8080 node /usr/src/server/server.js &
-NODE_PORT=8081 node /usr/src/server/server.js &
-NODE_PORT=8082 node /usr/src/server/server.js &
+pm2 start /usr/src/server/server.js -i 0 &
 service nginx restart
