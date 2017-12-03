@@ -1,6 +1,6 @@
 # MGMT Database
 
-## SQL Schema
+## SQL Schema Example
 
 ```
 link

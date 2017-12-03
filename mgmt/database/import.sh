@@ -14,32 +14,32 @@ echo "---------------------------------------------------------------"
 psql mgmt_db < mgmt_schema.sql
 
 echo "---------------------------------------------------------------"
-echo "* IMPORTING LINK TABLE                                   *"
+echo "* IMPORTING LINK TABLE                                        *"
 echo "---------------------------------------------------------------"
 psql mgmt_db < link.sql
 
 echo "---------------------------------------------------------------"
-echo "* IMPORTING CHUNK TABLE                                   *"
+echo "* IMPORTING CHUNK TABLE                                       *"
 echo "---------------------------------------------------------------"
 psql mgmt_db < chunk.sql
 
 echo "---------------------------------------------------------------"
-echo "* IMPORTING host TABLE                                   *"
+echo "* IMPORTING host TABLE                                        *"
 echo "---------------------------------------------------------------"
 psql mgmt_db < host.sql
 
 echo "---------------------------------------------------------------"
-echo "* IMPORTING CRAWLER TABLE                                   *"
+echo "* IMPORTING CRAWLER TABLE                                      *"
 echo "---------------------------------------------------------------"
 psql mgmt_db < crawler.sql
 
 echo "---------------------------------------------------------------"
-echo "* IMPORTING INDEX BUILDER TABLE                                   *"
+echo "* IMPORTING INDEX BUILDER TABLE                                *"
 echo "---------------------------------------------------------------"
 psql mgmt_db < index_builder.sql
 
 echo "---------------------------------------------------------------"
-echo "* IMPORTING INDEX SERVER TABLE                                   *"
+echo "* IMPORTING INDEX SERVER TABLE                                 *"
 echo "---------------------------------------------------------------"
 psql mgmt_db < index_server.sql
 
