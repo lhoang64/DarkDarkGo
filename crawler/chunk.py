@@ -18,7 +18,6 @@ class Chunk:
         """
         new_chunk = open(self.chunk_id, 'wb')
         new_chunk.close()
-        return new_chunk
 
     def append_to_chunk(self, link, title, html):
         """
