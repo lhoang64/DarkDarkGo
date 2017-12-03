@@ -110,7 +110,7 @@
     
 ### Index Server
 
-**Get content chunk and index chunk metadata**
+**Get content chunk metadata, index chunk metadata, index server host for distribution**
 - URL: `/get_chunks`
 - Method: `GET`
 - Return:  5 chunks metadata each request
@@ -134,6 +134,17 @@
         }
     ]
     ```
+
+**Send chunk replication state**
+- URL: `/set_replicated_chunk`
+- Method: `POST`
+- Sample data:
+```
+{
+    'chunk_id': 101,
+    'state': 'propagated'
+}
+```
 
 **Send query stats**
 - URL: `/send_query_stats`
