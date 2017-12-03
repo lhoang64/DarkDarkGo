@@ -3,7 +3,7 @@
 ### All Components
 
 **Send state when wakes up.**
-- URL: `/set_component_state`
+- URL: `/set_state/component`
 - Method: `POST`
 - State can be:
     - `online`: startup
@@ -43,9 +43,20 @@
         "links": ["stuff_1.com", "stuff_2.com", "stuff_3.com", "stuff_4.com", "stuff_5.com"]
     }
     ```
+**Set link's state**
+- URL: `/set_state/link`
+- Method: `GET`
+- Sample data:
+    ```
+    {
+        "url": "https://www.google.com",
+        "state": "crawled"
+    }
+    ```
 
-**Send content chunk metadata**
-- URL: `/set_content_chunk_metadata`
+
+**Send content chunk metadata (basically state since we've already know the host)**
+- URL: `/set_state/content_chunk`
 - Method: `POST`
 - Sample data:
     ```
@@ -65,8 +76,8 @@
     }
     ```
 
-**Get unreplicated chunks**
-- URL: `/get_unreplicated_chunks`
+**Get unpropagated chunks**
+- URL: `/get_chunks/unpropagated`
 - Method: `GET`
 - Return: 5 chunks each request
 - Sample data:
@@ -79,7 +90,7 @@
 ### Index Builder
 
 **Get content chunk metadata**
-- URL: `/get_content_chunk_metadata`
+- URL: `/get_metadata/content_chunk`
 - Method: `GET`
 - Return: 5 content chunks metadata each request
 - Sample data:
@@ -92,8 +103,8 @@
     ]
     ```
 
-**Send index chunk metadata**
-- URL: `/set_index_chunk_metadata`
+**Send index chunk metadata/state (same reason above)**
+- URL: `/set_state/index_chunk`
 - Method: `POST`
 - State can be: 
     - `building` 
@@ -135,8 +146,8 @@
     ]
     ```
 
-**Send chunk replication state**
-- URL: `/set_replicated_chunk`
+**Send chunk propagated state**
+- URL: `/set_chunk/propagated`
 - Method: `POST`
 - Sample data:
 ```
@@ -147,7 +158,7 @@
 ```
 
 **Send query stats**
-- URL: `/send_query_stats`
+- URL: `/send_stats/query`
 - Method: `POST`
 - Sample data:
     ```
@@ -161,7 +172,7 @@
 ### Front-End
 
 **Get server map periodically**
-- URL: `/get_servers_map`
+- URL: `/get_map/index_server`
 - Method: `GET`
 - Sample data:
     ```
@@ -184,7 +195,7 @@
 ### Other
 
 **Our Watchdogs ping all servers periodically for health status.**
-- URL: `/get_health_status`
+- URL: `/get_health`
 - Method: `GET`
 - Health status can be:
     - `healthy`: is functioning okay
