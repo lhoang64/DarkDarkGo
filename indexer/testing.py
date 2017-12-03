@@ -33,7 +33,7 @@ for id_ in chunk_ids:
     print(content_chunk.json())
 
     # Save the content chunk from Crawler into local json files
-    with open('/sample_files/content_files/{0}.json'.format(id_), 'w') as content_file:
+    with open('sample_files/content_files/{0}.json'.format(id_), 'w') as content_file:
         json.dump(content_chunk.json(), content_file)
     content_file.close()
 
