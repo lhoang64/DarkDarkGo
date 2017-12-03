@@ -109,7 +109,7 @@ class Index_Builder:
         data_file.close()
 
         # Open new file to write indexed chunk into
-        file_name = '/sample_files/indexed_files/indexed_' + self.chunk_id + '.json'
+        file_name = 'sample_files/indexed_files/indexed_' + self.chunk_id + '.json'
         with open(file_name, 'w') as indexed_file:
             json.dump(indexed_words, indexed_file)
         indexed_file.close()
