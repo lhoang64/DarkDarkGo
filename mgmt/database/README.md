@@ -3,19 +3,6 @@
 ## SQL Schema Example
 
 ```
-link
-    ------------------------------------
-   | index  | link        | state       |
-   | SERIAL | VARCHAR(22) | VARCHAR(22) |
-   |        | PRIMARY     |             |
-    ------------------------------------
-   | 1      | stuff1.com  | OK          |
-   | 2      | stuff2.com  | OK          | 
-   | 3      | stuff3.com  | OK          | 
-   | 4      | stuff4.com  | OK          |
-   | 5      | stuff5.com  | OK          |  
-   | 6      | stuff6.com  | Error       | 
-    ------------------------------------
 
 chunk
     ---------------------------
@@ -29,6 +16,21 @@ chunk
    | 4      | 4        | OK    | 
    | 5      | 5        | Error | 
     ---------------------------
+
+link
+    --------------------------------------------------
+   | index  | link        | chunk_id    | state       |
+   | SERIAL | VARCHAR(22) | VARCHAR(22) | VARCHAR(22) |
+   |        | PRIMARY     | REF         |
+    --------------------------------------------------
+   | 1      | stuff1.com  | 1           | OK          |
+   | 2      | stuff2.com  | 1           | OK          | 
+   | 3      | stuff3.com  | 1           | OK          | 
+   | 4      | stuff4.com  | 1           | OK          |
+   | 5      | stuff5.com  | 1           | OK          |  
+   | 6      | stuff6.com  | 2           | Error       | 
+    --------------------------------------------------
+
    
 host
     -------------------------------------------------------------------------
