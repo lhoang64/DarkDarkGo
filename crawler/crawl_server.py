@@ -24,14 +24,6 @@ parser.add_argument('--mgmt-port', type=int, required=True)
 args = parser.parse_args()
 print(args)
 
-#port = environ.get('LISTEN_PORT')
-#thread_num = int(environ.get('CRAWLER_THREADS'))
-#user_agent = environ.get('USERAGENT')
-#queue_host = environ.get('QUEUE_HOST')
-#queue_port = environ.get('QUEUE_PORT')
-#mgmt_host = environ.get('MANAGEMENT_HOST')
-#mgmt_port = environ.get('MANAGEMENT_PORT')
-
 queue = Host(args.queue_host, args.queue_port)
 management = Host(args.mgmt_host, args.mgmt_port)
 

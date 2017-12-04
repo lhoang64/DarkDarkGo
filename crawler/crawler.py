@@ -37,14 +37,15 @@ class Crawler:
         self.log = logging.getLogger()
         self.running = Event() # TODO Maybe wrap this?
 
-        self._declare_online()
+        if not self._declare_online():
+            raise ConnectionError("Couldn't connect to the device manager.")
         # TODO Create and start managment thread.
 
     def _declare_online(self):
         """
         Sends management a request saying that we are online.
         """
-        self._manager.alert_online()
+        return self._manager.alert_online()
 
     def _add_to_chunk(self, link, html):
         # TODO Impliment this once Linh makes the API available.
