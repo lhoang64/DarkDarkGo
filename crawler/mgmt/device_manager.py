@@ -17,7 +17,10 @@ class DeviceManager:
     def _set_state(self, state):
         try:
             resp = requests.post(
-                    self._address + '/set_state/crawler',
+                    '{}/set_state/crawler:{}'.format(
+                        self._address,
+                        self._port
+                        ),
                     data={'state' : state}
                     )
             return resp.status_code == 200
@@ -84,7 +87,10 @@ class DeviceManager:
             state = 'crawled'
         else:
             state = 'error'
-        requests.post(
-                self._address + '/set_state/link',
+        resp = requests.post(
+                '{}/set_state/crawler:{}'.format(
+                    self._address,
+                    self._port
+                    ),
                 data={'link' : link, 'state' : state}
                 )
