@@ -11,7 +11,6 @@
 CREATE TABLE IF NOT EXISTS chunk (
   index SERIAL NOT NULL,
   id INT UNIQUE NOT NULL,
-  state VARCHAR(22) NULL,
   PRIMARY KEY (id));
 
 
@@ -20,8 +19,8 @@ CREATE TABLE IF NOT EXISTS chunk (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS link (
   index SERIAL NOT NULL,
-  link VARCHAR(22) UNIQUE NOT NULL,
-  chunk_id INT NOT NULL,
+  link VARCHAR(255) UNIQUE NOT NULL,
+  chunk_id INT NULL,
   state VARCHAR(22) NULL,
   PRIMARY KEY (link));
 
