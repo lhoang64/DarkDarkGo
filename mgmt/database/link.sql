@@ -4,9 +4,13 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
-INSERT INTO "link" VALUES (DEFAULT, 'stuff1.com', 1, 'OK');
-INSERT INTO "link" VALUES (DEFAULT, 'stuff2.com', 1, 'OK');
-INSERT INTO "link" VALUES (DEFAULT, 'stuff3.com', 1, 'OK');
-INSERT INTO "link" VALUES (DEFAULT, 'stuff4.com', 1, 'OK');
-INSERT INTO "link" VALUES (DEFAULT, 'stuff5.com', 1, 'OK');
-INSERT INTO "link" VALUES (DEFAULT, 'stuff6.com', 2, 'Error');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_1.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_2.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_3.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_4.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_5.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_6.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_7.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_8.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_9.com', DEFAULT, 'pending');
+INSERT INTO "link" VALUES (DEFAULT, 'https://www.example_10.com', DEFAULT, 'pending');
