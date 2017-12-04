@@ -6,6 +6,7 @@
         it's just a dummy until the server is up.
 """
 
+import requests
 
 class QueueWrapper:
 
@@ -25,10 +26,35 @@ class QueueWrapper:
         }
         """
 
-        links = ['https://zqktlwi4fecvo6ri.onion']
-        c_id = 0
+        resp = requests.get(
+                '{}/get_links:{}'.format(self._address, self._port)
+                )
+
+        links = resp.json['links']
+        c_id = resp.json['chunk_id']
 
         return (links, c_id)
+
+    def get_n_links(self, n_links):
+        """
+        Requests n more links from the queue. This should only be used to fill
+            in for failed links.
+
+        Response JSON should look like:
+        {
+            "links": ["stuff_1.onion", "stuff_2.onion", "stuff_3.onion"]
+        }
+
+        Returns: a list of strings, each an onion link.
+        """
+        resp = requests.get(
+                '{}/get_links/{}:{}'.format(
+                    self._address,
+                    n_links,
+                    self._port
+                    )
+                )
+        return resp.json['links']
 
     def add_links(self, links):
         """

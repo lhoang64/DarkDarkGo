@@ -39,7 +39,6 @@ class Crawler:
 
         if not self._declare_online():
             raise ConnectionError("Couldn't connect to the device manager.")
-        # TODO Create and start managment thread.
 
     def _declare_online(self):
         """
