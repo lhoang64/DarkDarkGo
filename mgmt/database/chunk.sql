@@ -4,9 +4,10 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
-INSERT INTO "chunk" VALUES (DEFAULT, 1, 'OK');
-INSERT INTO "chunk" VALUES (DEFAULT, 2, 'OK');
-INSERT INTO "chunk" VALUES (DEFAULT, 3, 'OK');
-INSERT INTO "chunk" VALUES (DEFAULT, 4, 'OK');
-INSERT INTO "chunk" VALUES (DEFAULT, 5, 'OK');
-INSERT INTO "chunk" VALUES (DEFAULT, 6, 'Error');
+INSERT INTO "chunk" VALUES (DEFAULT, 101);
+INSERT INTO "chunk" VALUES (DEFAULT, 1);
+INSERT INTO "chunk" VALUES (DEFAULT, 2);
+INSERT INTO "chunk" VALUES (DEFAULT, 3);
+INSERT INTO "chunk" VALUES (DEFAULT, 4);
+INSERT INTO "chunk" VALUES (DEFAULT, 5);
+INSERT INTO "chunk" VALUES (DEFAULT, 6);
