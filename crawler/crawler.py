@@ -47,7 +47,7 @@ class Crawler:
         """
         return self._manager.alert_online()
 
-    def _add_to_chunk(self, link, html):
+    def _add_to_chunk(self, link, html, title):
         # TODO Impliment this once Linh makes the API available.
         pass
 
@@ -58,15 +58,15 @@ class Crawler:
                 get_tor_session()
                 )
         spider.crawl()
+        self._manager.mark_link_crawled(link, spider.success)
         if spider.success:
             self._add_to_chunk(
                     link,
-                    spider.html
+                    spider.html,
+                    spider.title
                     )
-            self._manager.mark_link_crawled(link)
             return spider.links
         else:
-            self._manager.mark_link_crawled(link)
             return []
 
     def stop(self):

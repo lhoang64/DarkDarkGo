@@ -23,6 +23,7 @@ class Spider:
         self.success     = None
         self.spider_err  = False
         self.body        = ''
+        self.title       = ''
         self.links       = []
 
         self.log = logging.getLogger()
@@ -53,6 +54,8 @@ class Spider:
 
         self.body = resp.text
         soup = BeautifulSoup(self.text, 'html.parser')
+        self.title = soup.title
+        self._find_links(soup)
 
     def _dead_link(self, status_code=None):
         self.status_code = status_code
