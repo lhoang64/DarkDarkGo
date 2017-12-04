@@ -17,38 +17,58 @@ def get_chunks():
 @app.route('/get_chunk/<chunk_id>', methods=['GET'])
 def get_chunk(chunk_id):
     chunk_content = read_chunk.get_chunk(chunk_id)
-    resp = jsonify(chunk_content)
-    return resp
+    if chunk_content:
+        resp = jsonify(chunk_content)
+        return resp, 200
+    else:
+        message = 'Chunk {} not found'.format(chunk_id)
+        return message, 500
+
 
 @app.route('/get_document/<document_id>', methods=['GET'])
-def get_document(document_in):
-    # need to confirm with other teams with id format is
-    chunk_id = 'some portion of document_id'
-    doc_id = 'some portion of document_id'
+def get_document(document_id):
+    chunk_id = document_id[0:len(document_id)-1]
+    doc_id = int(document_id[len(document_id)-1])
     document = read_chunk.get_doc(chunk_id, doc_id)
-    resp = jsonify(document)
-    return resp
+    if document:
+        resp = jsonify(document)
+        return resp, 200
+    else:
+        message = 'Chunk {} not found'.format(document_id)
+        return message, 500
 
 @app.route('/get_link/<document_id>', methods=['GET'])
 def get_link(document_id):
-    chunk_id = 'some portion of document_id'
-    doc_id = 'some portion of document_id'
+    chunk_id = document_id[0:len(document_id) - 1]
+    doc_id = int(document_id[len(document_id) - 1])
     link = read_chunk.get_link(chunk_id, doc_id)
-    resp = jsonify(link)
-    return resp
+    if link:
+        resp = jsonify(link)
+        return resp
+    else:
+        message = 'Chunk {} not found'.format(document_id)
+        return message, 500
 
 @app.route('/get_title/<document_id>', methods=['GET'])
 def get_title(document_id):
-    chunk_id = 'some portion of document_id'
-    doc_id = 'some portion of document_id'
+    chunk_id = document_id[0:len(document_id) - 1]
+    doc_id = int(document_id[len(document_id) - 1])
     title = read_chunk.get_title(chunk_id, doc_id)
-    resp = jsonify(title)
-    return resp
+    if title:
+        resp = jsonify(title)
+        return resp
+    else:
+        message = 'Chunk {} not found'.format(document_id)
+        return message, 500
 
 @app.route('/get_raw_html/<document_id>', methods=['GET'])
 def get_raw_html(document_id):
-    chunk_id = 'some portion of document_id'
-    doc_id = 'some portion of document_id'
+    chunk_id = document_id[0:len(document_id) - 1]
+    doc_id = int(document_id[len(document_id) - 1])
     raw_html = read_chunk.get_raw_html(chunk_id, doc_id)
-    resp = jsonify(raw_html)
-    return resp
+    if raw_html:
+        resp = jsonify(raw_html)
+        return resp
+    else:
+        message = 'Chunk {} not found'.format(document_id)
+        return message, 500
