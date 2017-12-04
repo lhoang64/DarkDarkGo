@@ -45,11 +45,14 @@
     ```
 **Set link's state**
 - URL: `/set_state/link`
-- Method: `GET`
+- Method: `POST`
+- State can be:
+    - `error`
+    - `crawled`
 - Sample data:
     ```
     {
-        "url": "https://www.google.com",
+        "link": "https://www.google.com",
         "state": "crawled"
     }
     ```
@@ -58,6 +61,8 @@
 **Send content chunk metadata (basically state since we've already know the host)**
 - URL: `/set_state/content_chunk`
 - Method: `POST`
+- State can be:
+    - `crawled`
 - Sample data:
     ```
     {
@@ -107,10 +112,8 @@
 - URL: `/set_state/index_chunk`
 - Method: `POST`
 - State can be: 
-    - `building` 
     - `built` 
     - `error`: cannot build index chunk
-    - `propagated`: replicated across Index Servers
 - Sample data:
     ```
     {
