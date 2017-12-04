@@ -68,17 +68,20 @@ class Crawler:
             self._manager.mark_link_crawled(link)
             return []
 
-    def stop():
+    def stop(self):
         """
         Tells the thread to stop looping until start() is called.
         """
         self.running.clear()
 
-    def re_start():
+    def re_start(self):
         """
         Tells the thread that it should be running.
         """
         self.running.set()
+
+    def is_running(self):
+        return self.running.is_set()
 
     def get_chunks(self):
         """
