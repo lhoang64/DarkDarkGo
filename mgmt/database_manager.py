@@ -10,7 +10,7 @@ import psycopg2
 import psycopg2.extras
 
 DATABASE = 'mgmt_db'
-USER = 'hoanhan'
+USER = 'postgres'
 HOST = 'localhost'
 
 class DatabaseManager():
@@ -18,7 +18,7 @@ class DatabaseManager():
         """
         Get all records for a given relation.
         :param relation_name: Relation name
-        :return: None
+        :return: List of rows where each row is a dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -100,7 +100,7 @@ class DatabaseManager():
         :param type: Crawler | Index Builder | Index Server
         :param state: online | waiting | error | paused
         :param health: healthy | failure | probation
-        :return:
+        :return: None
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -242,7 +242,7 @@ class DatabaseManager():
     def get_all_relations_for_all_chunks(self):
         """
         Return all relations for all chunks in chunk relation.
-        :return: List
+        :return: List of dictionary
         """
         results = []
         chunks = self.get_relation('chunk')
@@ -281,7 +281,7 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def get_first_n_link(self, number, state):
+    def get_first_n_pending_links(self, number):
         """
         Get first number of links for a given state.
         :return: List
@@ -289,7 +289,7 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM link WHERE state = '{0}' ORDER BY index LIMIT {1};".format(state, number))
+            cur.execute("SELECT * FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT {0};".format(number))
             results = cur.fetchall()
             cur.close()
             return results
