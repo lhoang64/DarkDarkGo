@@ -17,7 +17,7 @@ class DeviceManager:
     def _set_state(self, state):
         try:
             resp = requests.post(
-                    self._address + '/set_state/component',
+                    self._address + '/set_state/crawler',
                     data={'state' : state}
                     )
             return resp.status_code == 200
