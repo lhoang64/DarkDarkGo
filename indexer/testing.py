@@ -9,8 +9,8 @@ import requests
 import json
 from index_builder_final import Index_Builder
 
-mgmt_ip_addr = '10.2.16.57'
-crawler_ip_addr = '10.2.25.143'
+mgmt_ip_addr = '10.10.117.179'
+# crawler_ip_addr = '10.10.117.116'
 
 # Test Endpoint 1: Update online status to Mgmt
 online = requests.post('http://{0}:5000/set_component_state'.format(mgmt_ip_addr), json={"state": "online"})
@@ -25,11 +25,18 @@ for item in metadata.json():
     chunk_id = item['chunk_id']
     chunk_ids.append(chunk_id)
 
+crawler_ip_addrs = []
+for item in metadata.json():
+    host = item['host']
+    crawler_ip_addrs.append(host)
+
 print(chunk_ids)
+print(crawler_ip_addrs)
 
 # Test Endpoint 3: Get content chunk from Crawler
-for id_ in chunk_ids:
-    content_chunk = requests.get('http://{0}:5000/get_chunk/{1}'.format(crawler_ip_addr, id_))
+for i in range(len(chunk_ids)):
+    id_ = chunk_ids[i]
+    content_chunk = requests.get('http://{0}:5000/get_chunk/{1}'.format(crawler_ip_addrs[i], id_))
     print(content_chunk.json())
 
     # Save the content chunk from Crawler into local json files

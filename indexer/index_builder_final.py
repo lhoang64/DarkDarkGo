@@ -33,7 +33,7 @@ class Index_Builder:
                 Remove all stop words + get frequency of each word in the chunk 
         """
         word_lists = []
-        indexed_words = []
+        indexed_words = {}
         entries = []
         stop_words = set(stopwords.words('english'))
         stop_words.update('.', '?', '-', '\'', '\:', ';', ',', '!', '<', '>', '%', '$', '\"', '/', '(', ')', '[', ']', '|', 
@@ -78,11 +78,10 @@ class Index_Builder:
         """
         # Only choose words with frequency count >= 3
         for word in unique_words:
-            indexed_word = {}
+            indexed_word_info = {}
             entry_ids = []
             if word_counts[word] >= 3:
-                indexed_word['word'] = word
-                indexed_word['word_count'] = word_counts[word]
+                indexed_word_info['word_count'] = word_counts[word]
 
                 for tup in entries:
                     if word == tup[0]:
@@ -93,10 +92,10 @@ class Index_Builder:
                         for en_id in sorted(entry_ids, reverse=True):
                             doc_ids.append(en_id[1])
                         # the value of key 'urls' is now ranked
-                        indexed_word['doc_ID'] = doc_ids
+                        indexed_word_info['doc_ID'] = doc_ids
 
             if indexed_word:
-                indexed_words.append(indexed_word)
+                indexed_words[word] = indexed_word_info
 
         return indexed_words
 
