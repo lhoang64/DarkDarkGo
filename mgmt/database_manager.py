@@ -284,12 +284,29 @@ class DatabaseManager():
     def get_first_n_pending_links(self, number):
         """
         Get first number of links for a given state.
-        :return: List
+        :param number: Number of links
+        :return: List of rows where each row is a dictionary which has a link
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT {0};".format(number))
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(e)
+
+    def get_first_n_crawled_chunk_ids(self, number):
+        """
+        Get first number of crawled chunk ids
+        :param number: Number of chunk ids
+        :return: List of rows where each row is a dictionary which has chunk id
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT {0};".format(number))
             results = cur.fetchall()
             cur.close()
             return results
