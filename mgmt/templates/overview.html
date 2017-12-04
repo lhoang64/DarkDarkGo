@@ -29,41 +29,64 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Chunk ID</th>
-                        <th>Links</th>
-                        <th>Crawler</th>
-                        <th>Index Builder</th>
-                        <th>Index Servers</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Links</th>
+                        <th scope="col">Crawler</th>
+                        <th scope="col">Index Server</th>
+                        <th scope="col">Index Builders</th>
                     </tr>
                 </thead>
                 {% for entry in data %}
                 <tbody>
                     <tr>
-                        <td>{{ entry['chunk_id'] }}</td>
+                        <!--chunk_id-->
+                        <th scope="row">{{entry['chunk_id']}}</th>
+                        <!--links-->
                         <td>
-                            {% for item in entry['links'] %}
-                                <p>{{ item['link'] }}</p>
-                            {% endfor %}
+                            {% if entry['links'] == [] %}
+                                Pending
+                            {% else %}
+                                {% for item in entry['links'] %}
+                                    <p> {{ item['link'] }} </p>
+                                {% endfor %}
+                            {% endif %}
                         </td>
+                        <!--crawler-->
                         <td>
-                            {{ entry['crawler'][0]['c_host'] }}
-                            {{ entry['crawler'][0]['state'] }}
+                            {% if entry['crawler'] == [] %}
+                                Pending
+                            {% else %}
+                                {% for item in entry['crawler'] %}
+                                    <p> {{ item['c_host'] }} </p>
+                                {% endfor %}
+                            {% endif %}
                         </td>
+                        <!--index_builder-->
                         <td>
-                            {{ entry['index_builder'][0]['ib_host'] }}
-                            {{ entry['index_builder'][0]['state'] }}
+                            {% if entry['index_builder'] == [] %}
+                                Pending
+                            {% else %}
+                                {% for item in entry['index_builder'] %}
+                                    <p> {{ item['ib_host'] }} </p>
+                                {% endfor %}
+                            {% endif %}
                         </td>
+                        <!--index_server-->
                         <td>
-                            {% for item in entry['index_server'] %}
-                                <p>Row {{ item['row'] }} : {{ item['is_host'] }}</p>
-                            {% endfor %}
+                            {% if entry['index_server'] == [] %}
+                                Pending
+                            {% else %}
+                                {% for item in entry['index_server'] %}
+                                    <p> Row {{ item['row'] }} : {{ item['is_host'] }} </p>
+                                {% endfor %}
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>
                 {% endfor %}
             </table>
         {% else %}
-            <h1>No data</h1>
+            <p>No data</p>
         {% endif %}
     </div>
 
