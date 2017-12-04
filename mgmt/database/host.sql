@@ -4,6 +4,7 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
+INSERT INTO "host" VALUES (DEFAULT, '101.101.101.101:101','Genesis', 'genesis', 'genesis');
 INSERT INTO "host" VALUES (DEFAULT, '10.10.127.100:5000','Crawler', 'online', 'healthy');
 INSERT INTO "host" VALUES (DEFAULT, '10.10.127.101:5000','Crawler', 'waiting', 'failure');
 INSERT INTO "host" VALUES (DEFAULT, '10.10.127.102:5000','Index Builder', 'online', 'healthy');
