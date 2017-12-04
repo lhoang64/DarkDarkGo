@@ -6,12 +6,23 @@
         it's just a dummy until the server is up.
 """
 
+import requests
 
 class DeviceManager:
 
     def __init__(self, dm_host):
         self._address = dm_host.ip
         self._port = dm_host.port
+
+    def _set_state(self, state):
+        try:
+            resp = requests.post(
+                    self._address + '/set_state/component',
+                    data={'state' : state}
+                    )
+            return resp.status_code == 200
+        except:
+            return False
 
     def alert_online(self):
         """
@@ -20,7 +31,7 @@ class DeviceManager:
 
         TODO: Get request format from mgmt team.
         """
-        pass
+        return self._set_state('online')
 
     def send_waiting(self):
         """
@@ -29,14 +40,23 @@ class DeviceManager:
 
         TODO: Get request format from mgmt team.
         """
-        pass
+        return self._set_state('waiting')
+
+    def send_error(self):
+        """
+        Tell the mgmt team that we hit a fatal error, and that we won't
+            continue to run.
+
+        Note: Does not take any params.
+        """
+        return self._set_state('error')
 
     def get_chunks(self):
         """
         Requests the list of chunks which should be stored on the crawler.
 
         Response JSON should look like:
-        [string]
+        [int]
         """
         chunks = [1, 2, 3]
 
@@ -53,11 +73,18 @@ class DeviceManager:
         """
         pass
 
-    def mark_link_crawled(link):
+    def mark_link_crawled(link, success):
         """
         Alert's management that `link` has been crawled, and does not need to
             be checked again. Uses the /add_crawled_link endpoint.
 
         param: link : String containing the link which has been crawled.
         """
-        pass
+        if success:
+            state = 'crawled'
+        else:
+            state = 'error'
+        requests.post(
+                self._address + '/set_state/link',
+                data={'link' : link, 'state' : state}
+                )
