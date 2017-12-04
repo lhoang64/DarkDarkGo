@@ -26,7 +26,7 @@ body{
 	margin-left: 820px;
 }
 .container {
-	width: 100px;
+	width: 500px;
 	position: relative;
 	display: inline-block;
 }
@@ -42,9 +42,51 @@ body{
 	margin-top: 15px;
 	margin-left: 750px;
 }
-.container button#unlucky {
+#unlucky {
 	width: 150px;
 	height: 40px;
-	margin-top: -35px;
+	margin-top: -39px;
 	margin-left: 920px;
+	position: absolute;
+}
+.header {
+	width: 1910px;
+	height: 170px;
+}
+#logo1 {
+	height: 70px;
+	width: 170px;
+}
+#skullz{
+	height: 70px;
+	width: 170px;
+
+}
+.container input#search1 {
+	width: 900px;
+	height: 27px;
+	position: absolute;
+	top: -60px;
+	left: 180px;
+}
+#title {
+	font-size: 23px;
+	font-family: serif;
+	margin-top: -60px;
+}
+a:link {
+	color: pink;
+}
+a:visited {
+	color: green;
+}
+#rank {
+	font-size: 13px;
+	margin-top: -21px;
+	color: white;
+}
+#description {
+	font-size: 15px;
+	margin-top: -15px;
+	color: white;
 }

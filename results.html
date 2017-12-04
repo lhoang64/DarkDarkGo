@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>title of search quary</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+
+<div class="header"> 
+	<div id="logo1">
+		<img src="logo_static.png" id="skullz">
+	</div>
+	<div class="container">
+		<input type="search" id="search1" placeholder="whatever was searched" />
+	</div>
+
+</div>
+<div class="results">
+	<p id="title"><a href= "link" id="link"> Title of Page (plus link)</a> </p>
+	<p id="rank"> Where the rank is(not sure what is a rank) </p>
+	<p id="description"> Description of site </p>
+
+	<script>
+		var obj = JSON.parse('{ "link":"www.something", "rank":2, "description":"This site is a site about this"}');
+		document.getElementById("link").innerHTML = obj.link;
+		
+	 </script>
+</div>
+</body>
+
+
+
+</html>
