@@ -313,6 +313,21 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
+    def get_index_servers_from_host(self):
+        """
+        Return a list of index servers available in host relation.
+        :return: List of rows where each row is a dictionary that has index server
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM host WHERE type = 'Index Server';")
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(e)
+
     def delete_first_row(self, relation_name):
         """
         Delete first row for a given relation.
