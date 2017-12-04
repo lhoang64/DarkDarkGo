@@ -30,13 +30,12 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def operate_on_chunk_relation(self, function, chunk_id, state=None):
+    def operate_on_chunk_relation(self, function, chunk_id):
         """
         Execute basic operations on chunk relation.
         - INSERT: Insert a given chunk id. Default state is None.
-        - UPDATE_STATE: Update state for a given chunk id.
         - DELETE: Delete a given chunk id.
-        :param function: INSERT | UPDATE_STATE | DELETE
+        :param function: INSERT | DELETE
         :param chunk_id: Chunk ID
         :param state: OK | Error
         :return: None
@@ -46,9 +45,7 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO chunk VALUES (DEFAULT, '{0}');".format(chunk_id))
-            elif function == 'UPDATE_STATE':
-                cur.execute("UPDATE chunk SET state = '{0}' WHERE id = {1};".format(state, chunk_id))
+                cur.execute("INSERT INTO chunk VALUES (DEFAULT, {0});".format(chunk_id))
             elif function == 'DELETE':
                 cur.execute("DELETE FROM chunk WHERE id = {0};".format(chunk_id))
             else:
@@ -59,14 +56,15 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def operate_on_link_relation(self, function, url, chunk_id=None, state=None):
+    def operate_on_link_relation(self, function, link, chunk_id=None, state=None):
         """
         Execute basic operations on link relation.
-        - INSERT: Insert a given link and chunk id. Default state is None.
+        - INSERT: Insert a given link and chunk id. Default chunk id is None state is pending.
+        - UPDATE_STATE: Update chunk id for a given link.
         - UPDATE_STATE: Update state for a given link.
         - DELETE: Delete a given link.
-        :param function: INSERT | UPDATE_STATE | DELETE
-        :param url: URL
+        :param function: INSERT | UPDATE_CHUNK_ID | UPDATE_STATE | DELETE
+        :param link: URL
         :param state: OK | Error
         :return: None
         """
@@ -75,11 +73,13 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO link VALUES (DEFAULT, '{0}', {1});".format(url, chunk_id))
+                cur.execute("INSERT INTO link VALUES (DEFAULT, '{0}', DEFAULT, 'pending');".format(link))
+            elif function == 'UPDATE_CHUNK_ID':
+                cur.execute("UPDATE link SET chunk_id = '{0}' WHERE link = '{1}';".format(chunk_id, link))
             elif function == 'UPDATE_STATE':
-                cur.execute("UPDATE link SET state = '{0}' WHERE link = '{1}';".format(state, url))
+                cur.execute("UPDATE link SET state = '{0}' WHERE link = '{1}';".format(state, link))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM link WHERE link = '{0}';".format(url))
+                cur.execute("DELETE FROM link WHERE link = '{0}';".format(link))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -122,10 +122,10 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def operate_on_crawler_relation(self, function, chunk_id, host=None, task=None):
+    def operate_on_crawler_relation(self, function, chunk_id, host='101.101.101.101:101', task=None):
         """
         Execute basic operations on crawler relation.
-        - INSERT: Insert a given chunk_id and host. Default task is None.
+        - INSERT: Insert a given chunk_id and host. Default host is '101.101.101.101:101'. Default task is None.
         - UPDATE_TASK: Update task for a given chunk_id.
         - DELETE: Delete a given chunk_id.
         :param function: INSERT | UPDATE_TASK | DELETE
@@ -152,10 +152,10 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def operate_on_index_builder_relation(self, function, chunk_id, host=None, task=None):
+    def operate_on_index_builder_relation(self, function, chunk_id, host='101.101.101.101:101', task=None):
         """
         Execute basic operations on index builder relation.
-        - INSERT: Insert a given chunk_id and host. Default task is None.
+        - INSERT: Insert a given chunk_id and host. Default host is '101.101.101.101:101', default task is None.
         - UPDATE_TASK: Update task for a given chunk_id.
         - DELETE: Delete a given chunk_id.
         :param function: INSERT | UPDATE_TASK | DELETE
@@ -170,6 +170,8 @@ class DatabaseManager():
 
             if function == 'INSERT':
                 cur.execute("INSERT INTO index_builder VALUES (DEFAULT, {0}, '{1}');".format(chunk_id, host))
+            elif function == 'UPDATE_HOST':
+                cur.execute("UPDATE index_builder SET ib_host = '{0}' WHERE chunk_id = {1};".format(host, chunk_id))
             elif function == 'UPDATE_TASK':
                 cur.execute("UPDATE index_builder SET ib_task = '{0}' WHERE chunk_id = {1};".format(task, chunk_id))
             elif function == 'DELETE':
@@ -182,10 +184,10 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def operate_on_index_server_relation(self, function, chunk_id, row=None, host=None):
+    def operate_on_index_server_relation(self, function, chunk_id, row=0, host='101.101.101.101:101'):
         """
         Execute basic operations on index server relation.
-        - INSERT: Insert a given row, chunk id and host.
+        - INSERT: Insert a given row, chunk id and host. Default host is '101.101.101.101:101', default row is 0.
         - UPDATE_ROW: Update row for a given chunk id and host.
         - UPDATE_CHUNK_ID: Update chunk id for a given row and host.
         - UPDATE_HOST: Update host for a given row and chunk id.
@@ -217,24 +219,12 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def delete_first_row(self, relation_name):
-        """
-        Delete first row for a given relation.
-        :param relation_name: Relation name
-        :return: None
-        """
-        try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("DELETE FROM {0} WHERE ctid IN (SELECT ctid FROM {0} ORDER BY index LIMIT 1);".format(relation_name))
-            conn.commit()
-            cur.close()
-        except Exception as e:
-            print(e)
-
     def get_relation_for_chunk_id(self, relation_name, chunk_id):
         """
         Return all results in a given relation for a specific chunk id.
+        For example:
+            - get_relation_for_chunk_id(relation_name='crawler', 101) returns crawler's host for chunk id 101
+            - get_relation_for_chunk_id(relation_name='index_builder', 101) returns index builder's host for chunk id 101
         :param chunk_id: Chunk ID
         :return: List
         """
@@ -251,7 +241,7 @@ class DatabaseManager():
 
     def get_all_relations_for_all_chunks(self):
         """
-        Return all relations for all chunks.
+        Return all relations for all chunks in chunk relation.
         :return: List
         """
         results = []
@@ -274,6 +264,52 @@ class DatabaseManager():
             results.append(temp_dict)
 
         return results
+
+    def get_length(self, relation_name):
+        """
+        Return length of a given relation.
+        :param relation_name: Relation name
+        :return: Int
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT COUNT(*) FROM {0};".format(relation_name))
+            result = cur.fetchall()
+            cur.close()
+            return result[0]['count']
+        except Exception as e:
+            print(e)
+
+    def get_first_n_link(self, number, state):
+        """
+        Get first number of links for a given state.
+        :return: List
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM link WHERE state = '{0}' ORDER BY index LIMIT {1};".format(state, number))
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(e)
+
+    def delete_first_row(self, relation_name):
+        """
+        Delete first row for a given relation.
+        :param relation_name: Relation name
+        :return: None
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("DELETE FROM {0} WHERE ctid IN (SELECT ctid FROM {0} ORDER BY index LIMIT 1);".format(relation_name))
+            conn.commit()
+            cur.close()
+        except Exception as e:
+            print(e)
 
     def __delete_relation__(self, relation_name):
         """
