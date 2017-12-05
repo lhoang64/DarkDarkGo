@@ -4,27 +4,27 @@
 
 ```
 link
-    ----------------------------------------------------------------
-   | index  | link                      | chunk_id    | state       |
-   | SERIAL | VARCHAR(255)              | VARCHAR(22) | VARCHAR(22) |
-   |        | PRIMARY                   | REF         |             |
-    ----------------------------------------------------------------
-   | 1      | https://www.example_1.com | 1           | crawled     |
-   | 2      | https://www.example_2.com | 1           | crawled     | 
-   | 3      | https://www.example_3.com | 1           | crawled     | 
-   | 4      | https://www.example_4.com | 1           | crawled     |
-   | 5      | https://www.example_5.com | 1           | crawled     |  
-   | 6      | https://www.example_6.com | None        | None        | 
-    ----------------------------------------------------------------
+    -----------------------------------------------------------------
+   | index  | link                      | chunk_id     | state       |
+   | SERIAL | VARCHAR(255)              | VARCHAR(255) | VARCHAR(22) |
+   |        | PRIMARY                   | REF          |             |
+    -----------------------------------------------------------------
+   | 1      | https://www.example_1.com | 1c           | crawled     |
+   | 2      | https://www.example_2.com | 1c           | crawled     | 
+   | 3      | https://www.example_3.com | 1c           | crawled     | 
+   | 4      | https://www.example_4.com | 1c           | crawled     |
+   | 5      | https://www.example_5.com | 1c           | crawled     |  
+   | 6      | https://www.example_6.com | None         | None        | 
+    -----------------------------------------------------------------
 
 chunk
-    -------------------
-   | index  | id       |
-   | SERIAL | INT      |
-   |        | PRIMARY  |
-    -------------------
-   | 1      | 1        |
-    -------------------
+    -----------------------
+   | index  | id           |
+   | SERIAL | VARCHAR(255) |
+   |        | PRIMARY      |
+    -----------------------
+   | 1      | 1            |
+    -----------------------
    
 host
     -------------------------------------------------------------------------
@@ -80,7 +80,6 @@ index_server
 - If Crawler finish crawling without any error, they send us chunk_id with crawled state.
   - Update that chunk_id task to crawled in Crawler relation
   - Update corresponding links to crawled in Link relation
-  - Insert that chunk_id to Index Builder relation, default IB's host and default task is None
 - Otherwise:
   - Crawler send us a link with error state. 
   - We mark it as error in Link relation and use that to find out which chunk_id is 
@@ -89,12 +88,11 @@ index_server
 
 #### Index Builder
 - When Index Builder request chunk metadata from us:
-  - We get the first 5 chunk_id where task is None
+  - We get the first 5 chunk_id in Crawler relation where state is crawled
   - Give them chunk_id with Crawler's host
-  - Update Index Builder's host and set task to building
+  - Insert Index Builder's host and set task to building
 - If Index Builder finish indexing without any error, they send us chunk_id with built state
   - We mark them as built in Index Builder relation
-  - TODO: ASSIGN TASK TO SERVER HERE 
 - Otherwise:
   - They send us a chunk_id with error state.
   - We mark them as error.
@@ -102,7 +100,7 @@ index_server
   They will get 5 chunks every time they ask us. 
 
 ### Index Server
-- If a chunk_id is successfully crawled and built, insert it to Index Server relation.
+- If an index chunk is successfully built, insert its chunk id to Index Server relation.
 - TODO: CHOOSE A DISTRIBUTING ALGORITHM
 
 ### How to install on Mac:

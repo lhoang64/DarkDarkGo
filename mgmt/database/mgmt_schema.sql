@@ -10,7 +10,7 @@
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS chunk (
   index SERIAL NOT NULL,
-  id INT UNIQUE NOT NULL,
+  id VARCHAR(255) UNIQUE NOT NULL,
   PRIMARY KEY (id));
 
 
@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS chunk (
 CREATE TABLE IF NOT EXISTS link (
   index SERIAL NOT NULL,
   link VARCHAR(255) UNIQUE NOT NULL,
-  chunk_id INT NULL,
-  state VARCHAR(22) NULL,
+  chunk_id VARCHAR(255) NULL,
+  state VARCHAR(22) NOT NULL,
   PRIMARY KEY (link));
 
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS host (
   index SERIAL NOT NULL,
   host VARCHAR(22) NOT NULL,
   type VARCHAR(22) NOT NULL,
-  state VARCHAR(22) NULL,
+  state VARCHAR(22) NOT NULL,
   health VARCHAR(22) NULL,
   PRIMARY KEY (host));
 
@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS host (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS crawler (
   index SERIAL NOT NULL,
-  chunk_id INT UNIQUE NOT NULL,
+  chunk_id VARCHAR(255) UNIQUE NOT NULL,
   C_host VARCHAR(22) NOT NULL,
-  C_task VARCHAR(22) NULL);
+  C_task VARCHAR(22) NOT NULL);
 
 
 -- -----------------------------------------------------
@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS crawler (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS index_builder (
   index SERIAL NOT NULL,
-  chunk_id INT UNIQUE NOT NULL,
+  chunk_id VARCHAR(255) UNIQUE NOT NULL,
   IB_host VARCHAR(22) NOT NULL,
-  IB_task VARCHAR(22) NULL);
+  IB_task VARCHAR(22) NOT NULL);
 
 
 -- -----------------------------------------------------
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS index_builder (
 CREATE TABLE IF NOT EXISTS index_server (
   index SERIAL NOT NULL,
   row INT NOT NULL,
-  chunk_id INT NOT NULL,
+  chunk_id VARCHAR(255) NOT NULL,
   IS_host VARCHAR(22) NOT NULL);
 
 
