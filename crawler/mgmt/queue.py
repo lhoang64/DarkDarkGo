@@ -7,12 +7,15 @@
 """
 
 import requests
+import logging
 
 class QueueWrapper:
 
     def __init__(self, queue_host):
         self._address = queue_host.ip
         self._port = queue_host.port
+
+        self.log = logging.getLogger()
 
     def get_links(self):
         """
@@ -25,6 +28,7 @@ class QueueWrapper:
             "chunk_id" : string
         }
         """
+        self.log.debug('Requesting new chunk/links from management.')
 
         resp = requests.get(
                 '{}/get_links:{}'.format(self._address, self._port)
@@ -54,7 +58,14 @@ class QueueWrapper:
                     self._port
                     )
                 )
-        return resp.json['links']
+
+        links = resp.json['links']
+        self.log.info(
+                'Requested {} more links from management, received {}.'
+                .format(n_links, len(links))
+                )
+
+        return links
 
     def add_links(self, links):
         """
@@ -67,6 +78,12 @@ class QueueWrapper:
             "links" : [string]
         }
         """
+
+        self.log.info(
+                'Adding {} links to management\'s queue'
+                .format(len(links))
+                )
+
         resp = requests.post(
                 self._address + '/add_links',
                 data={'links' : links}

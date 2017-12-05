@@ -35,6 +35,7 @@ class Spider:
 
         Returns: nothing
         """
+        self.log.info('crawling link: {}'.format(self.link))
         try:
             resp = self.session.get(
                     self.link,
@@ -42,20 +43,31 @@ class Spider:
                     )
         except ConnectionError as conn_err:
             # TODO What should we do here?
+            self.log.exception('What?')
             self.spider_err = True
             return
         except exceptions.Timeout as to_err:
-            self._dead_link
+            self.log.warning(
+                    'Request to {} timed out, marking as dead.'
+                    .format(self.link)
+                    )
+            self._dead_link()
             return
         except exceptions.RequestException as req_err:
+            self.log.exception(
+                    'Hit internal requests error, failed to spider {}'
+                    .format(self.link)
+                    )
             self.spider_err = True
-            self.log.error(req_err)
             return
 
         self.body = resp.text
         soup = BeautifulSoup(self.text, 'html.parser')
         self.title = soup.title
         self._find_links(soup)
+
+        self.log.info('Successfully spidered {}'.format(self.link))
+        self.log.debug('Found {} links.'.format(len(self.links)))
 
     def _dead_link(self, status_code=None):
         self.status_code = status_code

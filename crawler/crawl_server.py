@@ -5,6 +5,7 @@
     Nov, 28, 2017 - Matt Jones matthewjones@bennington.edu
 """
 import argparse
+import logging
 from _thread import start_new_thread
 from os import environ
 
@@ -22,10 +23,12 @@ parser.add_argument('--queue-port', type=int, required=True)
 parser.add_argument('--mgmt-host', required=True)
 parser.add_argument('--mgmt-port', type=int, required=True)
 args = parser.parse_args()
-print(args)
 
 queue = Host(args.queue_host, args.queue_port)
 management = Host(args.mgmt_host, args.mgmt_port)
+
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
 
 crawler = Crawler(
         args.threads,
