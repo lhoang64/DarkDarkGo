@@ -12,8 +12,8 @@ The webserver runs on port 8010 and act as a middleware between the React fronte
 ---
 The API server is comprised of **four** different components.
 
-## `api` server
-The api server is made up of `routes` and `controller`. There are **three** routes, as described below.
+## **`api` server**
+The api server is made up of `routes` and `controller`. There are only **two** routes, as described below.
 
 ### **Search**
 The frontend uses this endpoint to make any queries.
@@ -65,12 +65,33 @@ fetch('http://0.0.0.0:8010/get_health')
 .then((responsejson) => console.log(responsejson.status))
 .catch((error) => console.error(error));
 ```
-## Caching service ##
+## **Caching service** ##
+A LRU cache is used to serve the most frequently queried contents on this server without overloading the index server. Cache items are stored as key-value pairs and the lookup time is `O(1)`, which is far more superior than if the query were to make double trips to the index server.
 
+**Cache configuration**
+- `maxage`: 10 days
+- `maxlength`: 10000 items
 
+**Sample cache item**
+
+*Index:* 
+
+>k : Query
+
+>v : Docids for the query 
+```JSON
+{
+    "k": "a righteous man",
+    "v": ['123-abc', '801-pqb', 234-cde', '389-zxi'] 
+}
+```
+<!-- 
 ## Manager ##
 - Instantiates 
 - Health reporting to 
 - /get_health
 
 ## Aggregating service ##
+
+
+## Dependencies ## -->
