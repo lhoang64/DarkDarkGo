@@ -36,8 +36,6 @@ Code: 200
     message: []
 }
 ```
-
-The frontend uses this route to get search results for any query. 
 - **Sample Call**:
 ```Javascript
 fetch('http://0.0.0.0:8010/search?q=sample%20call')
@@ -46,6 +44,27 @@ fetch('http://0.0.0.0:8010/search?q=sample%20call')
 .catch((error) => console.error(error));
 ```
 
+
+### **Health reporting**
+The management uses this endpoint to check on the webserver's health.
+- **URL**: `/get_health?q=`
+- **Method**: `GET`
+- **URL Params**: None
+- **Success Response**: 
+```
+Code: 200
+{
+    status: 'healthy',
+}
+````
+
+- **Sample Call**:
+```Javascript
+fetch('http://0.0.0.0:8010/get_health')
+.then((response) => response.json())
+.then((responsejson) => console.log(responsejson.status))
+.catch((error) => console.error(error));
+```
 ## Caching service ##
 
 
