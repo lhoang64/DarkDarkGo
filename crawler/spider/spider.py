@@ -35,6 +35,7 @@ class Spider:
 
         Returns: nothing
         """
+        self.log.info('crawling link: {}'.format(self.link))
         try:
             resp = self.session.get(
                     self.link,
@@ -42,6 +43,10 @@ class Spider:
                     )
         except ConnectionError as conn_err:
             # TODO What should we do here?
+            self.log.exception(
+                    'Hit internal requests error, failed to spider {}'
+                    .format()
+                    )
             self.spider_err = True
             return
         except exceptions.Timeout as to_err:

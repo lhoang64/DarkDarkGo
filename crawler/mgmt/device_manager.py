@@ -7,6 +7,7 @@
 """
 
 import requests
+import loggging
 
 class DeviceManager:
 
@@ -14,7 +15,10 @@ class DeviceManager:
         self._address = dm_host.ip
         self._port = dm_host.port
 
+        self.log = logging.getLogger()
+
     def _set_state(self, state):
+        self.log.info('Setting state to {}'.format(state))
         try:
             resp = requests.post(
                     '{}/set_state/crawler:{}'.format(
@@ -25,6 +29,7 @@ class DeviceManager:
                     )
             return resp.status_code == 200
         except:
+            self.log.exception('Failed to set state.')
             return False
 
     def alert_online(self):

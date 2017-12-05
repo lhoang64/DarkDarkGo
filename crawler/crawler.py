@@ -37,7 +37,9 @@ class Crawler:
         self.log = logging.getLogger()
         self.running = Event() # TODO Maybe wrap this?
 
-        if not self._declare_online():
+        if self._declare_online():
+            self.log.info('Crawler initialized successfully!')
+        else:
             raise ConnectionError("Couldn't connect to the device manager.")
 
     def _declare_online(self):
@@ -72,12 +74,14 @@ class Crawler:
         """
         Tells the thread to stop looping until start() is called.
         """
+        self.log.warning('Crawler going to stand-by.')
         self.running.clear()
 
     def re_start(self):
         """
         Tells the thread that it should be running.
         """
+        self.log.warning('Crawler resuming.')
         self.running.set()
 
     def is_running(self):
@@ -97,11 +101,16 @@ class Crawler:
         # TODO Find a more robust way of starting/stopping and keeping track.
         while self.running.wait():
             links, chunk_id = self._manager.get_links()
+            self.log.info('starting new chunk: {}'.format(chunk_id))
             self.chunk_id = chunk_id
             if not links:
+                self.log.warning(
+                        "Didn't get any links from management, waiting for 60."
+                        )
                 self.running.clear()
                 self.running.wait(60)
                 self.running.set()
+                self.log.warning('Resuming crawler.')
                 continue
 
             # TODO Throttle this somehow.
