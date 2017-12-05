@@ -94,14 +94,14 @@ class Index_Builder:
                         # the value of key 'urls' is now ranked
                         indexed_word_info['doc_ID'] = doc_ids
 
-            if indexed_word:
+            if indexed_word_info:
                 indexed_words[word] = indexed_word_info
 
         return indexed_words
 
     def run(self):
         # Open content chunk to read 
-        with open(self.content_chunk, encoding='utf-8') as data_file:
+        with open('sample_files/content_files/' + self.content_chunk, encoding='utf-8') as data_file:
             chunk_data = json.load(data_file)
 
             indexed_words = self.index_builder(chunk_data)
