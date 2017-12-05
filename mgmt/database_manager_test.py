@@ -149,7 +149,7 @@ def test_index_server_operation():
     """
     db_manager = DatabaseManager()
 
-    db_manager.operate_on_index_server_relation('INSERT', chunk_id=101)
+    db_manager.operate_on_index_server_relation('INSERT', row=0, chunk_id=101)
     if db_manager.get_relation('index_server')[-1]['chunk_id'] == 101:
         print('> Index Server relation: Test passed for INSERT')
     else:
@@ -173,8 +173,8 @@ def test_index_server_operation():
     else:
         print('> Index Server relation: Test failed for UPDATE_HOST')
 
-    db_manager.operate_on_index_server_relation('DELETE', chunk_id=101)
-    if db_manager.get_relation('index_server')[-1]['chunk_id'] != 101:
+    db_manager.operate_on_index_server_relation('DELETE', row=3, chunk_id=1, host='10.10.127.101:5000')
+    if db_manager.get_relation('index_server')[-1]['chunk_id'] != 1:
         print('> Index Server relation: Test passed for DELETE')
     else:
         print('> Index Server relation: Test failed for DELETE')
@@ -186,4 +186,3 @@ if __name__ == '__main__':
     test_crawler_operation()
     test_index_builder_operation()
     test_index_server_operation()
-

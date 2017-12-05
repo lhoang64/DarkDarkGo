@@ -8,6 +8,7 @@
 
 import psycopg2
 import psycopg2.extras
+from psycopg2 import sql
 
 DATABASE = 'mgmt_db'
 USER = 'postgres'
@@ -23,10 +24,10 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM {0} ORDER BY index;".format(relation_name))
-            links = cur.fetchall()
+            cur.execute(sql.SQL("SELECT * FROM {} ORDER BY index").format(sql.Identifier(relation_name)))
+            relation = cur.fetchall()
             cur.close()
-            return links
+            return relation
         except Exception as e:
             print(e)
 
@@ -45,9 +46,9 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO chunk VALUES (DEFAULT, {0});".format(chunk_id))
+                cur.execute("INSERT INTO chunk (id) VALUES (%s);", (chunk_id,))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM chunk WHERE id = {0};".format(chunk_id))
+                cur.execute("DELETE FROM chunk WHERE id = %s;", (chunk_id,))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -73,13 +74,13 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO link VALUES (DEFAULT, '{0}', DEFAULT, 'pending');".format(link))
+                cur.execute("INSERT INTO link (link, state) VALUES (%s, 'pending');", (link,))
             elif function == 'UPDATE_CHUNK_ID':
-                cur.execute("UPDATE link SET chunk_id = '{0}' WHERE link = '{1}';".format(chunk_id, link))
+                cur.execute("UPDATE link SET chunk_id = %s WHERE link = %s;", (chunk_id, link,))
             elif function == 'UPDATE_STATE':
-                cur.execute("UPDATE link SET state = '{0}' WHERE link = '{1}';".format(state, link))
+                cur.execute("UPDATE link SET state = %s WHERE link = %s;", (state, link,))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM link WHERE link = '{0}';".format(link))
+                cur.execute("DELETE FROM link WHERE link = %s;", (link,))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -107,13 +108,13 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO host VALUES (DEFAULT, '{0}', '{1}');".format(host, type))
+                cur.execute("INSERT INTO host (host, type) VALUES (%s, %s);", (host, type,))
             elif function == 'UPDATE_STATE':
-                cur.execute("UPDATE host SET state = '{0}' WHERE host = '{1}';".format(state, host))
+                cur.execute("UPDATE host SET state = %s WHERE host = %s;", (state, host,))
             elif function == 'UPDATE_HEALTH':
-                cur.execute("UPDATE host SET health = '{0}' WHERE host = '{1}';".format(health, host))
+                cur.execute("UPDATE host SET health = %s WHERE host = %s;", (health, host,))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM host WHERE host = '{0}';".format(host))
+                cur.execute("DELETE FROM host WHERE host = %s;", (host,))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -139,11 +140,11 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO crawler VALUES (DEFAULT, {0}, '{1}');".format(chunk_id, host))
+                cur.execute("INSERT INTO crawler (chunk_id, c_host) VALUES (%s, %s);", (chunk_id, host,))
             elif function == 'UPDATE_TASK':
-                cur.execute("UPDATE crawler SET c_task = '{0}' WHERE chunk_id = {1};".format(task, chunk_id))
+                cur.execute("UPDATE crawler SET c_task = %s WHERE chunk_id = %s;", (task, chunk_id,))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM crawler WHERE chunk_id = {0};".format(chunk_id))
+                cur.execute("DELETE FROM crawler WHERE chunk_id = %s;", (chunk_id,))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -169,13 +170,13 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO index_builder VALUES (DEFAULT, {0}, '{1}');".format(chunk_id, host))
+                cur.execute("INSERT INTO index_builder (chunk_id, ib_host) VALUES (%s, %s);", (chunk_id, host,))
             elif function == 'UPDATE_HOST':
-                cur.execute("UPDATE index_builder SET ib_host = '{0}' WHERE chunk_id = {1};".format(host, chunk_id))
+                cur.execute("UPDATE index_builder SET ib_host = %s WHERE chunk_id = %s;", (host, chunk_id,))
             elif function == 'UPDATE_TASK':
-                cur.execute("UPDATE index_builder SET ib_task = '{0}' WHERE chunk_id = {1};".format(task, chunk_id))
+                cur.execute("UPDATE index_builder SET ib_task = %s WHERE chunk_id = %s;", (task, chunk_id,))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM index_builder WHERE chunk_id = {0};".format(chunk_id))
+                cur.execute("DELETE FROM index_builder WHERE chunk_id = %s;", (chunk_id,))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -184,11 +185,12 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def operate_on_index_server_relation(self, function, chunk_id, row=0, host='101.101.101.101:101'):
+    def operate_on_index_server_relation(self, function, row, chunk_id, host='101.101.101.101:101'):
         """
         Execute basic operations on index server relation.
         - INSERT: Insert a given row, chunk id and host. Default host is '101.101.101.101:101', default row is 0.
-        - UPDATE_ROW: Update row for a given chunk id and host.
+        - UPDATE_ALL: Update a record for a given row, chunk id, and host.
+        - UPDATE_ROW: Update row (column) for a given chunk id and host.
         - UPDATE_CHUNK_ID: Update chunk id for a given row and host.
         - UPDATE_HOST: Update host for a given row and chunk id.
         :param function: INSERT | UPDATE ROW | UPDATE CHUNK_ID | UPDATE_HOST | DELETE
@@ -202,15 +204,15 @@ class DatabaseManager():
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
-                cur.execute("INSERT INTO index_server VALUES (DEFAULT, {0}, {1}, '{2}');".format(row, chunk_id, host))
+                cur.execute("INSERT INTO index_server (row, chunk_id, is_host) VALUES (%s, %s, %s);", (row, chunk_id, host,))
             elif function == 'UPDATE_ROW':
-                cur.execute("UPDATE index_server SET row = {0} WHERE chunk_id = {1} AND is_host = '{2}';".format(row, chunk_id, host))
+                cur.execute("UPDATE index_server SET row = %s WHERE chunk_id = %s AND is_host = %s;", (row, chunk_id, host,))
             elif function == 'UPDATE_CHUNK_ID':
-                cur.execute("UPDATE index_server SET chunk_id = {0} WHERE row = {1} AND is_host = '{2}';".format(chunk_id, row, host))
+                cur.execute("UPDATE index_server SET chunk_id = %s WHERE row = %s AND is_host = %s;", (chunk_id, row, host,))
             elif function == 'UPDATE_HOST':
-                cur.execute("UPDATE index_server SET is_host = '{0}' WHERE row = {1} AND chunk_id = {2};".format(host, row, chunk_id))
+                cur.execute("UPDATE index_server SET is_host = %s WHERE row = %s AND chunk_id = %s;", (host, row, chunk_id,))
             elif function == 'DELETE':
-                cur.execute("DELETE FROM index_server WHERE chunk_id = {0};".format(chunk_id))
+                cur.execute("DELETE FROM index_server WHERE row = %s AND chunk_id = %s AND is_host = %s;", (row, chunk_id, host,))
             else:
                 print('NO FUNCTION FOUND')
 
@@ -231,8 +233,7 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM {0} WHERE chunk_id = {1};".format(relation_name, chunk_id))
-
+            cur.execute(sql.SQL("SELECT * FROM {} WHERE chunk_id = %s").format(sql.Identifier(relation_name)), [chunk_id])
             results = cur.fetchall()
             cur.close()
             return results
@@ -274,7 +275,7 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT COUNT(*) FROM {0};".format(relation_name))
+            cur.execute(sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(relation_name)))
             result = cur.fetchall()
             cur.close()
             return result[0]['count']
@@ -283,14 +284,14 @@ class DatabaseManager():
 
     def get_first_n_pending_links(self, number):
         """
-        Get first number of links for a given state.
+        Get first numbers of pending links.
         :param number: Number of links
         :return: List of rows where each row is a dictionary which has a link
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT {0};".format(number))
+            cur.execute("SELECT * FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
             cur.close()
             return results
@@ -299,14 +300,14 @@ class DatabaseManager():
 
     def get_first_n_crawled_chunk_ids(self, number):
         """
-        Get first number of crawled chunk ids
+        Get first numbers of crawled chunk ids
         :param number: Number of chunk ids
         :return: List of rows where each row is a dictionary which has chunk id
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT {0};".format(number))
+            cur.execute("SELECT * FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
             cur.close()
             return results
@@ -316,7 +317,7 @@ class DatabaseManager():
     def get_index_servers_from_host(self):
         """
         Return a list of index servers available in host relation.
-        :return: List of rows where each row is a dictionary that has index server
+        :return: List of rows where each row is a dictionary that which has index server's host
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -325,35 +326,5 @@ class DatabaseManager():
             results = cur.fetchall()
             cur.close()
             return results
-        except Exception as e:
-            print(e)
-
-    def delete_first_row(self, relation_name):
-        """
-        Delete first row for a given relation.
-        :param relation_name: Relation name
-        :return: None
-        """
-        try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("DELETE FROM {0} WHERE ctid IN (SELECT ctid FROM {0} ORDER BY index LIMIT 1);".format(relation_name))
-            conn.commit()
-            cur.close()
-        except Exception as e:
-            print(e)
-
-    def __delete_relation__(self, relation_name):
-        """
-        Delete relation.
-        :param relation_name: Relation name
-        :return: None
-        """
-        try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("DELETE FROM {0};".format(relation_name))
-            conn.commit()
-            cur.close()
         except Exception as e:
             print(e)
