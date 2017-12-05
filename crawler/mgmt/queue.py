@@ -67,4 +67,9 @@ class QueueWrapper:
             "links" : [string]
         }
         """
-        pass
+        resp = requests.post(
+                self._address + '/add_links',
+                data={'links' : links}
+                )
+
+        return resp.status_code == 200

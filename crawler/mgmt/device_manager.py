@@ -54,18 +54,24 @@ class DeviceManager:
         """
         return self._set_state('error')
 
-    def get_chunks(self):
+    def get_unprop_chunks(self):
         """
         Requests the list of chunks which should be stored on the crawler.
 
         Response JSON should look like:
-        [int]
+        {
+            "chunks": [100, 101, 102]
+        }
         """
-        chunks = [1, 2, 3]
+        resp = requests.get(
+                self._address + '/get_chunks/unpropagated'
+                )
+
+        chunks = resp.json['chunks']
 
         return chunks
 
-    def alert_chunk(chunk_id, address):
+    def alert_chunk(chunk_id):
         """
         Alerts mgmt that we are done this the chunk corresponding to chunk_id.
 
@@ -73,8 +79,21 @@ class DeviceManager:
             finished.
         param: address  : Named Tuple containing our ip and the port to
             contact us on.
+
+        format should be:
+        {
+            "chunk_id": 101,
+            "state": "crawled"
+        }
         """
-        pass
+        resp = requests.post(
+                self._address + '/set_state/content_chunk',
+                data={
+                    'chunk_id' : chunk_id,
+                    'state'    : 'crawled'
+                    }
+                )
+        return resp.status_code == 200
 
     def mark_link_crawled(link, success):
         """
