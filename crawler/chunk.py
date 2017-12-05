@@ -4,57 +4,64 @@
           Chunks are binary files. The last 20 bytes of a chunk is the header that can be used to seek to specific
           documents in the chunk.
 """
+import os
 
 
 class Chunk:
     def __init__(self, chunk_id):
         self.chunk_id = chunk_id
         self.header = []
+        self.path = './{}'.format(chunk_id) # '/data/{0}'.format(chunk_id)
 
     def create_chunk(self):
         """
         Given a chunk_id, create a new chunk
-        :return:
+        :return: none
         """
-        new_chunk = open(self.chunk_id, 'wb')
+        new_chunk = open(self.path, 'wb')
         new_chunk.close()
-        return new_chunk
 
     def append_to_chunk(self, link, title, html):
         """
         Append document to chunk, data appended includes document_header and crawler data.
-        :param link:
-        :param title:
-        :param html:
-        :return:
+        :param link: string
+        :param title: string
+        :param html: string
+        :return: none
         """
-        with open(self.chunk_id, 'ab') as f:
-            data = link + title + html
-            bin_data = data.encode('utf-8')
-            doc_header = self.__compute_doc_header(link, title, html)
-            for b_value in doc_header:
-                f.write(b_value)    # append document header to chunk
-            f.write(bin_data)       # append document data to chunk
+        if os.path.exists(self.path):
+            with open(self.path, 'ab') as f:
+                data = link + title + html
+                bin_data = data.encode('utf-8')
+                doc_header = self.__compute_doc_header(link, title, html)
+                for b_value in doc_header:
+                    f.write(b_value)    # append document header to chunk
+                f.write(bin_data)       # append document data to chunk
+        else:
+            raise Exception('Chunk does not exist')
 
     def append_header_to_chunk(self):
         """
         Called when all documents have been writen to chunk, appends header to end of chunk.
         Header is fixed length(20 bytes), every 4 bytes represents a document.
         Reading from left to right the documents go from 0 to 4.
-        :return:
+        :return: none
         """
-        with open(self.chunk_id, 'ab') as f:
-            for header_value in self.header:
-                f.write(header_value[0])    # append document_int_value
-                f.write(header_value[1])    # append document start offset
+        if len(self.header) != 0:
+            with open(self.path, 'ab') as f:
+                for header_value in self.header:
+                    f.write(header_value[0])    # append document_int_value
+                    f.write(header_value[1])    # append document start offset
+        else:
+            raise Exception('Cannot append empty header to chunk.')
 
-    def __compute_file_header_value(self, doc_int_value):
+    def compute_file_header_value(self, doc_int_value):
         """
         Calculates the documents start offset. Document start = length of all content prior to document
         :param doc_int_value: 0-4 int value
         :return: list contain byte objects
         """
-        f = open(self.chunk_id, 'rb')
+        f = open(self.path, 'rb')
         f.seek(0, 2)
         file_size = f.tell()
         f.close()
@@ -64,17 +71,17 @@ class Chunk:
         self.header.append(header_val)
         return self.header
 
-    def compute_doc_header(self, link, title, html):
+    def __compute_doc_header(self, link, title, html):
         """
         Calculates the document header, document header is a 14 byte long value that means:
         doc_length(2 bytes), doc_start_offset(2 bytes), link_start(2 bytes), link_length(1 byte), title_start(2 bytes),
         title_length(1 byte), html_start(2 bytes), html_length(2_bytes)
-        :param link:
-        :param title:
-        :param html:
+        :param link: string
+        :param title: string
+        :param html: string
         :return: array of byte objects
         """
-        f = open(self.chunk_id, 'rb')
+        f = open(self.path, 'rb')
         f.seek(0, 2)            # seek to end of file
         file_size = f.tell()    # length of file content before new doc addition
         f.close()
