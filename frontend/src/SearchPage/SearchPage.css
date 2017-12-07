@@ -1,3 +1,46 @@
 .whitetext{
     color: #fff;
 }
+
+.loader{
+    color: rgb(242, 236, 236);
+}
+
+.center {
+    top: 55%;
+    left: 45%;
+    position: absolute;
+}
+
+.centertext {
+    left: 20%;
+    margin-right: 5em;
+}
+
+.searchlink {
+    text-decoration: none;
+    color: rgb(34, 208, 54);
+}
+
+.searchlink:hover {
+    text-decoration: underline;
+}
+
+.resultdesc {
+    color: rgb(245, 242, 242);
+}
+
+.searchresults {
+    margin-left: 10vw;
+    margin-right: 30vw;
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.results {
+    margin-bottom: 2em;
+}
+
+#searchpage > .search-bar > #search-box {
+    margin-left: 10vw;
+}
