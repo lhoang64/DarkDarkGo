@@ -63,6 +63,7 @@
 - Method: `POST`
 - State can be:
     - `crawled`
+    - `propagated`
 - Sample data:
     ```
     {
@@ -114,6 +115,7 @@
 - State can be: 
     - `built` 
     - `error`: cannot build index chunk
+    - `propagated`
 - Sample data:
     ```
     {
@@ -124,40 +126,21 @@
     
 ### Index Server
 
-**Get content chunk metadata, index chunk metadata, index server host for distribution**
+**Get content chunk metadata, index chunk metadata for that given Index Server**
 - URL: `/get_chunks`
 - Method: `GET`
 - Return:  5 chunks metadata each request
 - Sample data:
-    ```
-    [
-        {
-            "chunk_id": 101,
-            "crawler_host": "10.10.127.100:5000",
-            "index_builder_host": "10.10.127.101:5000",
-            "index_server_host": [
-                                    {
-                                        "row": 1,
-                                        "host": "10.10.127.102:5000"
-                                    },
-                                    {
-                                        "row": 2,
-                                        "host": "10.10.127.102:5001"
-                                    }
-                                 ]
-        }
-    ]
-    ```
-
-**Send chunk propagated state**
-- URL: `/set_chunk/propagated`
-- Method: `POST`
-- Sample data:
 ```
-{
-    'chunk_id': 101,
-    'state': 'propagated'
-}
+[
+    {
+        "chunk_id": "101c",
+        "hosts": {
+                    "c_host": "http://101.101:101:101:5000",
+                    "ib_host": "http://101.101:101:102:5000"
+                  }
+    }
+]
 ```
 
 **Send query stats**
@@ -179,67 +162,22 @@
 - Method: `GET`
 - Sample data:
     ```
-    {
-       "map":[
-          {
-             "servers":[
-                {
-                   "host":"10.10.127.101:5000",
-                   "chunk_ids":[
-                      1,
-                      2,
-                      3
-                   ]
-                },
-                {
-                   "host":"10.10.127.101:5000",
-                   "chunk_ids":[
-                      1,
-                      2,
-                      3
-                   ]
-                }
-             ]
-          },
-          {
-             "servers":[
-                {
-                   "host":"10.10.127.101:5000",
-                   "chunk_ids":[
-                      1,
-                      2,
-                      3
-                   ]
-                }
-             ]
-          },
-          {
-             "servers":[
-                {
-                   "host":"10.10.127.101:5000",
-                   "chunk_ids":[
-                      1,
-                      2,
-                      3
-                   ]
-                }
-             ]
-          }
-       ],
-       "inverted_map":[
-          {
-             "101":"10.10.10",
-             "102":"10.10.11",
-             "101":"10.10.12"
-          },
-          {
-             "101":"10.10.10",
-             "102":"10.10.11",
-             "101":"10.10.12"
-          }
-       ]
-    }
-    ```
+    [
+        {
+            "row": 1,
+            "servers": [
+                        {
+                            "host": "10.10.10.10:5000",
+                            "chunk_id": ["1c", "2c", "3c"]
+                        },
+                                            {
+                            "host": "10.10.10.10:5000",
+                            "chunk_id": ["1c", "2c", "3c"]
+                        }
+                       ]
+        }
+    ]
+    ``` 
     
 ### Other
 

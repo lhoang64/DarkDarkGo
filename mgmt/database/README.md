@@ -39,7 +39,7 @@ host
 
 crawler
     ------------------------------------------------------
-   | index  | chunk_id | C_host             | C_task      |
+   | index  | chunk_id | c_host             | c_task      |
    | SERIAL | INT      | VARCHAR(22)        | VARCHAR(22) |
    |        | REF      | REF                |             | 
     ------------------------------------------------------
@@ -48,7 +48,7 @@ crawler
 
 index_builder
     ------------------------------------------------------
-   | index  | chunk_id | IB_host            | IB_task     | 
+   | index  | chunk_id | ib_host            | ib_task     | 
    | SERIAL | INT      | VARCHAR(22)        | VARCHAR(22) | 
    |        | REF      | REF                |             |
     ------------------------------------------------------
@@ -57,7 +57,7 @@ index_builder
 
 index_server
     ------------------------------------------------
-   | Index  | row   | chunk_id | IS_host            | 
+   | Index  | row   | chunk_id | is_host            | 
    | SERIAL | INT   | INT      | VARCHAR(22)        | 
    |        |       | REF      | REF                |
     ------------------------------------------------
