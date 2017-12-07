@@ -392,17 +392,12 @@ class DatabaseManager():
             temp = []
             for chunk in results:
                 temp_dict = {}
-
                 chunk_id = chunk['chunk_id']
-
                 temp_dict['chunk_id'] = chunk_id
                 temp_dict['hosts'] = {}
-
-                temp_dict['hosts']['c_host'] = self.get_relation_for_chunk_id('crawler', chunk_id)['c_host']
-                temp_dict['hosts']['ib_host'] = self.get_relation_for_chunk_id('index_builder', chunk_id)['ib_host']
-
+                temp_dict['hosts']['c_host'] = self.get_relation_for_chunk_id('crawler', chunk_id)[0]['c_host']
+                temp_dict['hosts']['ib_host'] = self.get_relation_for_chunk_id('index_builder', chunk_id)[0]['ib_host']
                 temp.append(temp_dict)
-
             cur.close()
             return temp
         except Exception as e:
