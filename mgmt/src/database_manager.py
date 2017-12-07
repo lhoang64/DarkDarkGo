@@ -15,22 +15,6 @@ USER = 'postgres'
 HOST = 'localhost'
 
 class DatabaseManager():
-    def get_relation(self, relation_name):
-        """
-        Get all records for a given relation.
-        :param relation_name: Relation name
-        :return: List of rows where each row is a dictionary
-        """
-        try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute(sql.SQL("SELECT * FROM {} ORDER BY index").format(sql.Identifier(relation_name)))
-            relation = cur.fetchall()
-            cur.close()
-            return relation
-        except Exception as e:
-            print(e)
-
     def operate_on_link_relation(self, function, link, chunk_id=None, state='pending'):
         """
         Execute basic operations on link relation.
@@ -223,6 +207,22 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
+    def get_relation(self, relation_name):
+        """
+        Get all records for a given relation.
+        :param relation_name: Relation name
+        :return: List of dictionary
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute(sql.SQL("SELECT * FROM {} ORDER BY index").format(sql.Identifier(relation_name)))
+            relation = cur.fetchall()
+            cur.close()
+            return relation
+        except Exception as e:
+            print(e)
+
     def get_relation_for_chunk_id(self, relation_name, chunk_id):
         """
         Return all results in a given relation for a specific chunk id.
@@ -230,7 +230,7 @@ class DatabaseManager():
             - get_relation_for_chunk_id(relation_name='crawler', 101) returns crawler's host for chunk id 101
             - get_relation_for_chunk_id(relation_name='index_builder', 101) returns index builder's host for chunk id 101
         :param chunk_id: Chunk ID
-        :return: List
+        :return: List of dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -268,7 +268,7 @@ class DatabaseManager():
 
         return results
 
-    def get_length(self, relation_name):
+    def get_relation_length(self, relation_name):
         """
         Return length of a given relation.
         :param relation_name: Relation name
@@ -288,7 +288,7 @@ class DatabaseManager():
         """
         Get first numbers of pending links.
         :param number: Number of links
-        :return: List of rows where each row is a dictionary which has a link
+        :return: List of dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -304,7 +304,7 @@ class DatabaseManager():
         """
         Get first numbers of crawled chunk ids
         :param number: Number of chunk ids
-        :return: List of rows where each row is a dictionary which has chunk id
+        :return: List of dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -316,15 +316,61 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def get_index_servers_from_host(self):
+    def get_first_n_built_chunk_ids(self, number):
         """
-        Return a list of index servers available in host relation.
-        :return: List of rows where each row is a dictionary that which has index server's host
+        Get first numbers of built chunk ids
+        :param number: Number of chunk ids
+        :return: List of dictionary
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM index_builder WHERE ib_task = 'built' ORDER BY index LIMIT %s;", (number,))
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(e)
+
+    def get_all_index_servers(self):
+        """
+        Get a list of index servers available in host relation.
+        :return: List of dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM host WHERE type = 'Index Server';")
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(e)
+
+    def get_all_index_builders(self):
+        """
+        Get a list of index builders available in host relation.
+        :return: List of dictionary
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM host WHERE type = 'Index Builder';")
+            results = cur.fetchall()
+            cur.close()
+            return results
+        except Exception as e:
+            print(e)
+
+    def get_all_crawlers(self):
+        """
+        Get a list of crawlers available in host relation.
+        :return: List of dictionary
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM host WHERE type = 'Crawler';")
             results = cur.fetchall()
             cur.close()
             return results
