@@ -32,31 +32,35 @@
     ```
 - If there's no link or less than 5 links, send back an empty JSON
 
-**Get a number of links to crawl**
-- URL: `/get_links/<int:number>`
-- Method: `GET`
-- Only use when a link/some links in chunk fail to get additional links without creating a new chunk_id
-- Return: a number of links
-- Sample data:
-    ```
-    {
-        "links": ["stuff_1.com", "stuff_2.com", "stuff_3.com", "stuff_4.com", "stuff_5.com"]
-    }
-    ```
 **Set link's state**
 - URL: `/set_state/link`
 - Method: `POST`
 - State can be:
     - `error`
     - `crawled`
-- Sample data:
+- If it's successfully crawled, request message should look like this:
     ```
     {
         "link": "https://www.google.com",
         "state": "crawled"
     }
     ```
+- Otherwise, if it's error, then we will send back a new link:
+    ```
+    {
+        "link": "https://www.bing.com",
+    }
+    ```
 
+**Add links to MGMT database**
+- URL: `/add_links`
+- Method: `POST`
+- Sample data:
+    ```
+    {
+        "links": ["google.com", "bing.com", "stuff.com"]
+    }
+    ```
 
 **Send content chunk metadata (basically state since we've already know the host)**
 - URL: `/set_state/content_chunk`
@@ -67,18 +71,8 @@
 - Sample data:
     ```
     {
-        "chunk_id": 101,
+        "chunk_id": "1c",
         "state": "crawled"
-    }
-    ```
-    
-**Add links to MGMT database**
-- URL: `/add_links`
-- Method: `POST`
-- Sample data:
-    ```
-    {
-        "links": ["google.com", "bing.com", "stuff.com"]
     }
     ```
 
