@@ -161,24 +161,32 @@
 - URL: `/get_map/index_servers`
 - Method: `GET`
 - Sample data:
-    ```
+
+```
+[
     [
-        {
-            "row": 1,
-            "servers": [
-                        {
-                            "host": "10.10.10.10:5000",
-                            "chunk_id": ["1c", "2c", "3c"]
-                        },
-                                            {
-                            "host": "10.10.10.10:5000",
-                            "chunk_id": ["1c", "2c", "3c"]
-                        }
-                       ]
-        }
+        { 
+            "host": "3.0.0.1",
+            "chunk_ids": ["1c", "2c", "3c"]
+        },
+        { 
+            "host": "3.0.0.2",
+            "chunk_ids": ["4c", "5c", "6c"]
+        }    
+    ],
+    [
+        { 
+            "host": "3.0.0.3",
+            "chunk_ids": ["1c", "2c", "3c"]
+        },
+        { 
+            "host": "3.0.0.4",
+            "chunk_ids": ["4c", "5c", "6c"]
+        }  
     ]
-    ``` 
-    
+]
+```
+
 ### Other
 
 **Our Watchdogs ping all servers periodically for health status.**
