@@ -32,8 +32,6 @@ Cacher.addToCache = (queryString, snippet) => {
 
 Cacher.dumpCacheToPersistence = () => {
     const dump = JSON.stringify(Cacher.cache.dump())
-    console.log("Type is ", typeof(dump))
-    console.log(dump)
     fs.writeFileSync("cachedata.txt", dump)
-    console.log("\nCache successfully dumped to persistence.")
+    console.log("Exiting cacher.\nCache successfully dumped to persistence.\n\n")
 }
