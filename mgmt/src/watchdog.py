@@ -3,7 +3,7 @@
     watchdog.py - A watchdog service for the device manager. Sends heartbeats to every
             other component in the system and informs their status to the device manager.
             Each instance of watchdog manages health checkups of up to 10 components.
-    Author: mgmt
+    Author: Nidesh Chitrakar (nideshchitrakar@bennington.edu)
     Date: 11/30/2017
 """
 from threading import Thread
