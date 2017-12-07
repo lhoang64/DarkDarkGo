@@ -293,7 +293,7 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT %s;", (number,))
+            cur.execute("SELECT link FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
             cur.close()
             return results
@@ -309,7 +309,7 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT %s;", (number,))
+            cur.execute("SELECT chunk_id FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
             cur.close()
             return results
@@ -325,7 +325,7 @@ class DatabaseManager():
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT * FROM index_builder WHERE ib_task = 'built' ORDER BY index LIMIT %s;", (number,))
+            cur.execute("SELECT chunk_id FROM index_builder WHERE ib_task = 'built' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
             cur.close()
             return results
@@ -377,11 +377,11 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def find_chunk_ids_for_index_servers(self, host):
+    def get_chunk_ids_for_index_servers(self, host):
         """
         Get all index servers for a given host.
         :param host:
-        :return:
+        :return: List of dictionary.
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -403,3 +403,33 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
+    def get_chunk_id_for_link(self, link):
+        """
+        Get chunk id for a given link.
+        :return: Link as a dictionary
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT chunk_id FROM link WHERE link = %s;", (link,))
+            result = cur.fetchall()
+            cur.close()
+            return result
+        except Exception as e:
+            print(e)
+
+    def get_links_for_chunk_id(self, chunk_id):
+        """
+        Get all crawling links available for a given chunk id.
+        :param chunk_id: Chunk ID
+        :return: List of dictionary
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT link FROM link WHERE chunk_id = %s AND state = 'crawling';", (chunk_id,))
+            result = cur.fetchall()
+            cur.close()
+            return result
+        except Exception as e:
+            print(e)
