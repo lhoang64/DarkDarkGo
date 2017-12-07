@@ -4,10 +4,8 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
-INSERT INTO "chunk" VALUES (DEFAULT, 101);
-INSERT INTO "chunk" VALUES (DEFAULT, 1);
-INSERT INTO "chunk" VALUES (DEFAULT, 2);
-INSERT INTO "chunk" VALUES (DEFAULT, 3);
-INSERT INTO "chunk" VALUES (DEFAULT, 4);
-INSERT INTO "chunk" VALUES (DEFAULT, 5);
-INSERT INTO "chunk" VALUES (DEFAULT, 6);
+INSERT INTO "chunk" VALUES (DEFAULT, '1c');
+INSERT INTO "chunk" VALUES (DEFAULT, '2c');
+INSERT INTO "chunk" VALUES (DEFAULT, '3c');
+INSERT INTO "chunk" VALUES (DEFAULT, '4c');
+INSERT INTO "chunk" VALUES (DEFAULT, '5c');

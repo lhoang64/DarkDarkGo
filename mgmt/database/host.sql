@@ -4,10 +4,17 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
-INSERT INTO "host" VALUES (DEFAULT, '101.101.101.101:101','Genesis', 'genesis', 'genesis');
-INSERT INTO "host" VALUES (DEFAULT, '10.10.127.100:5000','Crawler', 'online', 'healthy');
-INSERT INTO "host" VALUES (DEFAULT, '10.10.127.101:5000','Crawler', 'waiting', 'failure');
-INSERT INTO "host" VALUES (DEFAULT, '10.10.127.102:5000','Index Builder', 'online', 'healthy');
-INSERT INTO "host" VALUES (DEFAULT, '10.10.127.103:5000','Index Builder', 'waiting', 'healthy');
-INSERT INTO "host" VALUES (DEFAULT, '10.10.127.104:5000','Index Server', 'waiting', 'failure');
-INSERT INTO "host" VALUES (DEFAULT, '10.10.127.105:5000','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.1:5000','Crawler', 'online', 'healthy');
+
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.1:5001','Index Builder', 'online', 'healthy');
+
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.1:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.2:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.3:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.4:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.5:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.6:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.7:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.8:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.9:5002','Index Server', 'online', 'healthy');
+INSERT INTO "host" VALUES (DEFAULT, '127.0.1.0:5002','Index Server', 'online', 'healthy');

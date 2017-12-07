@@ -4,9 +4,8 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
-INSERT INTO "index_builder" VALUES (DEFAULT, 1, '10.10.127.102:5000', 'built');
-INSERT INTO "index_builder" VALUES (DEFAULT, 2, '10.10.127.102:5000', 'propagated');
-INSERT INTO "index_builder" VALUES (DEFAULT, 3, '10.10.127.103:5000', 'building');
-INSERT INTO "index_builder" VALUES (DEFAULT, 4, '10.10.127.103:5000', 'built');
-INSERT INTO "index_builder" VALUES (DEFAULT, 5, '10.10.127.102:5000', 'built');
-INSERT INTO "index_builder" VALUES (DEFAULT, 6, '10.10.127.103:5000', 'building');
+INSERT INTO "index_builder" VALUES (DEFAULT, '1c', '127.0.0.1:5001', 'built');
+INSERT INTO "index_builder" VALUES (DEFAULT, '2c', '127.0.0.1:5001', 'built');
+INSERT INTO "index_builder" VALUES (DEFAULT, '3c', '127.0.0.1:5001', 'built');
+INSERT INTO "index_builder" VALUES (DEFAULT, '4c', '127.0.0.1:5001', 'built');
+INSERT INTO "index_builder" VALUES (DEFAULT, '5c', '127.0.0.1:5001', 'built');
