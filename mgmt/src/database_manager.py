@@ -376,3 +376,34 @@ class DatabaseManager():
             return results
         except Exception as e:
             print(e)
+
+    def find_chunk_ids_for_index_servers(self, host):
+        """
+        Get all index servers for a given host.
+        :param host:
+        :return:
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute("SELECT * FROM index_server WHERE is_host = %s;", (host,))
+            results = cur.fetchall()
+
+            temp = []
+            for chunk in results:
+                temp_dict = {}
+
+                chunk_id = chunk['chunk_id']
+
+                temp_dict['chunk_id'] = chunk_id
+                temp_dict['hosts'] = {}
+
+                temp_dict['hosts']['c_host'] = self.get_relation_for_chunk_id('crawler', chunk_id)['c_host']
+                temp_dict['hosts']['ib_host'] = self.get_relation_for_chunk_id('index_builder', chunk_id)['ib_host']
+
+                temp.append(temp_dict)
+
+            cur.close()
+            return temp
+        except Exception as e:
+            print(e)
