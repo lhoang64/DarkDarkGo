@@ -4,6 +4,8 @@
 -- Date: 12/2/17
 -- -----------------------------------------------------
 
+INSERT INTO "host" VALUES (DEFAULT, '127.0.0.1', 'Test', 'offline', 'healthy');
+
 INSERT INTO "host" VALUES (DEFAULT, '1.0.0.1', 'Crawler', 'online', 'healthy');
 
 INSERT INTO "host" VALUES (DEFAULT, '2.0.0.1', 'Index Builder', 'online', 'healthy');
