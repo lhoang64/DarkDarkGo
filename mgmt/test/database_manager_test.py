@@ -382,5 +382,6 @@ if __name__ == '__main__':
     test_initial_setup()
 
     db_manager = DatabaseManager()
+    results = db_manager.find_chunk_ids_for_index_servers('127.0.0.1:5002')
     results = db_manager.get_all_relations_for_all_chunks()
     pprint(results)
