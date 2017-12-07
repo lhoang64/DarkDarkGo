@@ -15,7 +15,7 @@ def test_link_operation():
     :return: None
     """
     db_manager = DatabaseManager()
-    start_length = db_manager.get_length('link')
+    start_length = db_manager.get_relation_length('link')
 
     # INSERT
     db_manager.operate_on_link_relation('INSERT', link='https://www.example_101.com')
@@ -42,7 +42,7 @@ def test_link_operation():
 
     # DELETE
     db_manager.operate_on_link_relation('DELETE', link='https://www.example_101.com')
-    if db_manager.get_length('link') == start_length:
+    if db_manager.get_relation_length('link') == start_length:
         print('> PASSED | DELETE | Link relation')
     else:
         print('> FAILED | DELETE | Link relation')
@@ -53,7 +53,7 @@ def test_chunk_operation():
     :return: None
     """
     db_manager = DatabaseManager()
-    start_length = db_manager.get_length('chunk')
+    start_length = db_manager.get_relation_length('chunk')
 
     # INSERT
     db_manager.operate_on_chunk_relation('INSERT', chunk_id='101c')
@@ -64,7 +64,7 @@ def test_chunk_operation():
 
     # DELETE
     db_manager.operate_on_chunk_relation('DELETE', chunk_id='101c')
-    if db_manager.get_length('chunk') == start_length:
+    if db_manager.get_relation_length('chunk') == start_length:
         print('> PASSED | DELETE | Chunk relation')
     else:
         print('> FAILED | DELETE | Chunk relation')
@@ -75,7 +75,7 @@ def test_host_operation():
     :return: None
     """
     db_manager = DatabaseManager()
-    start_length = db_manager.get_length('host')
+    start_length = db_manager.get_relation_length('host')
 
     # INSERT
     db_manager.operate_on_host_relation('INSERT', host='101.101.101.101:101', type='Crawler')
@@ -100,7 +100,7 @@ def test_host_operation():
 
     # DELETE
     db_manager.operate_on_host_relation('DELETE', host='101.101.101.101:101')
-    if db_manager.get_length('host') == start_length:
+    if db_manager.get_relation_length('host') == start_length:
         print('> PASSED | DELETE | Host relation')
     else:
         print('> FAILED | DELETE | Host relation')
@@ -111,7 +111,7 @@ def test_crawler_operation():
     :return: None
     """
     db_manager = DatabaseManager()
-    start_length = db_manager.get_length('crawler')
+    start_length = db_manager.get_relation_length('crawler')
 
     # Setup temp chunk and host for testing
     db_manager.operate_on_chunk_relation('INSERT', chunk_id='101c')
@@ -141,7 +141,7 @@ def test_crawler_operation():
 
     # DELETE
     db_manager.operate_on_crawler_relation('DELETE', chunk_id='101c')
-    if db_manager.get_length('crawler') == start_length:
+    if db_manager.get_relation_length('crawler') == start_length:
         print('> PASSED | DELETE | Crawler relation')
     else:
         print('> FAILED | DELETE | Crawler relation')
@@ -157,7 +157,7 @@ def test_index_builder_operation():
     :return: None
     """
     db_manager = DatabaseManager()
-    start_length = db_manager.get_length('index_builder')
+    start_length = db_manager.get_relation_length('index_builder')
 
     # Setup temp chunk and host for testing
     db_manager.operate_on_chunk_relation('INSERT', chunk_id='101c')
@@ -187,7 +187,7 @@ def test_index_builder_operation():
 
     # DELETE
     db_manager.operate_on_index_builder_relation('DELETE', chunk_id='101c')
-    if db_manager.get_length('index_builder') == start_length:
+    if db_manager.get_relation_length('index_builder') == start_length:
         print('> PASSED | DELETE | Index Builder relation')
     else:
         print('> FAILED | DELETE | Index Builder relation')
@@ -203,7 +203,7 @@ def test_index_server_operation():
     :return: None
     """
     db_manager = DatabaseManager()
-    start_length = db_manager.get_length('index_server')
+    start_length = db_manager.get_relation_length('index_server')
 
     # Setup temp chunk and host for testing
     db_manager.operate_on_chunk_relation('INSERT', chunk_id='101c')
@@ -241,7 +241,7 @@ def test_index_server_operation():
 
     # DELETE
     db_manager.operate_on_index_server_relation('DELETE', row=102, chunk_id='102c', host='101.101.101.101:102')
-    if db_manager.get_length('index_server') == start_length:
+    if db_manager.get_relation_length('index_server') == start_length:
         print('> PASSED | DELETE | Index Server relation')
     else:
         print('> FAILED | DELETE | Index Server relation')
@@ -262,28 +262,9 @@ def test_get_relation_for_chunk_id():
     # Test
     result = db_manager.get_relation_for_chunk_id('crawler', chunk_id='101c')
     if len(result) == 1:
-        print('> PASSED | test_get_relation_for_chunk_id()')
+        print('> PASSED | get_relation_for_chunk_id()')
     else:
-        print('> FAILED | test_get_relation_for_chunk_id()')
-
-    # Clean up test env
-    db_manager.operate_on_chunk_relation('DELETE', chunk_id='101c')
-    db_manager.operate_on_host_relation('DELETE', host='101.101.101.101:101')
-    db_manager.operate_on_crawler_relation('DELETE', chunk_id='101c')
-
-def test_get_length():
-    # Setup test env
-    db_manager = DatabaseManager()
-    db_manager.operate_on_chunk_relation('INSERT', chunk_id='101c')
-    db_manager.operate_on_host_relation('INSERT', host='101.101.101.101:101', type='Test Server')
-    db_manager.operate_on_crawler_relation('INSERT', chunk_id='101c', host='101.101.101.101:101')
-
-    # Test
-    result = db_manager.get_length('crawler')
-    if result == 1:
-        print('> PASSED | test_get_length()')
-    else:
-        print('> FAILED | test_get_length()')
+        print('> FAILED | get_relation_for_chunk_id()')
 
     # Clean up test env
     db_manager.operate_on_chunk_relation('DELETE', chunk_id='101c')
@@ -298,9 +279,9 @@ def test_get_first_n_pending_links():
     # Test
     result = db_manager.get_first_n_pending_links(1)
     if len(result) == 1:
-        print('> PASSED | test_get_first_n_pending_links()')
+        print('> PASSED | get_first_n_pending_links()')
     else:
-        print('> FAILED | test_get_first_n_pending_links()')
+        print('> FAILED | get_first_n_pending_links()')
 
     # Clean up test env
     db_manager.operate_on_link_relation('DELETE', link='test_link')
@@ -315,44 +296,91 @@ def test_get_first_n_crawled_chunk_ids():
     # Test
     result = db_manager.get_first_n_crawled_chunk_ids(1)
     if len(result) == 1:
-        print('> PASSED | test_get_first_n_crawled_chunk_ids()')
+        print('> PASSED | get_first_n_crawled_chunk_ids()')
     else:
-        print('> FAILED | test_get_first_n_crawled_chunk_ids()')
+        print('> FAILED | get_first_n_crawled_chunk_ids()')
 
     # Clean up test env
     db_manager.operate_on_chunk_relation('DELETE', chunk_id='101c')
     db_manager.operate_on_host_relation('DELETE', host='101.101.101.101:101')
     db_manager.operate_on_crawler_relation('DELETE', chunk_id='101c')
 
-def test_get_index_servers_from_host():
+def test_get_first_n_built_chunk_ids():
     # Setup test env
     db_manager = DatabaseManager()
     db_manager.operate_on_chunk_relation('INSERT', chunk_id='101c')
-    db_manager.operate_on_host_relation('INSERT', host='101.101.101.101:101', type='Index Server')
+    db_manager.operate_on_host_relation('INSERT', host='101.101.101.101:101', type='Test Server')
+    db_manager.operate_on_index_builder_relation('INSERT', chunk_id='101c', host='101.101.101.101:101', task='built')
 
     # Test
-    result = db_manager.get_index_servers_from_host()
+    result = db_manager.get_first_n_built_chunk_ids(1)
     if len(result) == 1:
-        print('> PASSED | test_get_index_servers_from_host()')
+        print('> PASSED | get_first_n_built_chunk_ids()')
     else:
-        print('> FAILED | test_get_index_servers_from_host()')
+        print('> FAILED | get_first_n_built_chunk_ids()')
 
     # Clean up test env
     db_manager.operate_on_chunk_relation('DELETE', chunk_id='101c')
     db_manager.operate_on_host_relation('DELETE', host='101.101.101.101:101')
+    db_manager.operate_on_index_builder_relation('DELETE', chunk_id='101c')
 
-def test_get_all_relations_for_all_chunks():
-    pass
+def test_initial_setup():
+    """
+    Initial Setup:
+    - 25 crawled links, each belongs to 5 different chunk id from 1c to 5c
+    - 5 chunk ids
+    - 1 Crawler
+    - 1 Index Builder
+    - 10 Index Server
+    :return: None
+    """
+    db_manager = DatabaseManager()
+
+    if len(db_manager.get_relation('link')) == 25:
+        print("> PASSED | 25 Links")
+    else:
+        print("> FAILED | 25 Links")
+
+    if len(db_manager.get_relation('chunk')) == 5:
+        print("> PASSED | 5 Chunk IDs")
+    else:
+        print("> FAILED | 5 Chunk IDs")
+
+    if len(db_manager.get_all_crawlers()) == 1:
+        print("> PASSED | 1 Crawler")
+    else:
+        print("> FAILED | 1 Crawler")
+
+    if len(db_manager.get_all_index_builders()) == 1:
+        print("> PASSED | 1 Index Builder")
+    else:
+        print("> FAILED | 1 Index Builder")
+
+    if len(db_manager.get_all_index_servers()) == 10:
+        print("> PASSED | 10 Index Servers")
+    else:
+        print("> FAILED | 10 Index Servers")
+
 
 if __name__ == '__main__':
+    """
+        Basic operations
+    """
     test_link_operation()
     test_chunk_operation()
     test_host_operation()
     test_crawler_operation()
     test_index_builder_operation()
 
+    """
+        Helper functions
+    """
     test_get_relation_for_chunk_id()
-    test_get_length()
     test_get_first_n_pending_links()
     test_get_first_n_crawled_chunk_ids()
-    test_get_index_servers_from_host()
+    test_get_first_n_built_chunk_ids()
+    test_initial_setup()
+
+    db_manager = DatabaseManager()
+    results = db_manager.get_all_relations_for_all_chunks()
+    pprint(results)
