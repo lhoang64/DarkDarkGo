@@ -8,10 +8,9 @@
 """
 
 from flask import Flask, request, jsonify
-from mgmt.src.database_manager import DatabaseManager as db_manager
 from mgmt.src.utils import *
-from mgmt.src.constants import number_of_links,\
-    number_of_chunks,\
+from mgmt.src.constants import number_of_links, \
+    number_of_chunks, \
     number_of_rows
 
 app = Flask(__name__)
@@ -23,6 +22,7 @@ rows = distribute_index_servers()
     Internal Endpoints
 """
 
+
 @app.route('/get_relation/<string:relation_name>', methods=['GET'])
 def get_relation(relation_name):
     """
@@ -33,9 +33,11 @@ def get_relation(relation_name):
     result = db_manager.get_relation(relation_name)
     return jsonify(result)
 
+
 """
     All Components' Endpoints
 """
+
 
 @app.route("/set_state/component", methods=['POST'])
 def set_component_state():
@@ -72,9 +74,11 @@ def set_component_state():
         response = {'message': 'Failed to set state'}
         return jsonify(response), 201
 
+
 """
     Crawlers' Endpoints
 """
+
 
 @app.route("/get_links", methods=['GET'])
 def get_links():
@@ -118,6 +122,7 @@ def get_links():
     else:
         return jsonify(links=[])
 
+
 @app.route("/set_state/link", methods=['POST'])
 def set_link_state():
     """
@@ -158,6 +163,7 @@ def set_link_state():
         response = {'message': 'Failed to set state'}
         return jsonify(response), 201
 
+
 @app.route("/add_links", methods=['POST'])
 def add_links():
     """
@@ -165,14 +171,15 @@ def add_links():
     :return: 201 if successful, 200 if no links to add
     """
     links = request.get_json()
-    if links['links'] != []:
+    if links['links']:
         for link in links['links']:
-            db_manager.operate_on_link_relation('INSERT',link=link)
+            db_manager.operate_on_link_relation('INSERT', link=link)
         response = {'message': 'Successfully added links to database'}
         return jsonify(response), 201
     else:
         response = {'message': 'There are no links to add'}
         return jsonify(response), 200
+
 
 @app.route("/set_state/content_chunk", methods=['POST'])
 def set_content_chunk_state():
@@ -187,28 +194,38 @@ def set_content_chunk_state():
         # Get all links for that chunk id
         links = db_manager.get_links_for_chunk_id(chunk_id=chunk_id)
 
-        # Update state of all links to crawled
+        # Update state of all links to 'crawled'
         for entry in links:
             link = entry['link']
             db_manager.operate_on_link_relation('UPDATE_STATE',
                                                 link=link,
                                                 state='crawled')
 
-        # Update Crawler's chunk id task to crawled
+        # Update Crawler's chunk id task to 'crawled'
         db_manager.operate_on_crawler_relation('UPDATE_TASK',
                                                chunk_id=chunk_id,
                                                task='crawled')
 
         response = {'message': 'Successfully updated state to crawled'}
         return jsonify(response), 201
+    elif message['state'] == "propagated":
+        chunk_id = message['chunk_id']
+
+        # Update Crawler's chunk id task to 'propagated'
+        db_manager.operate_on_crawler_relation('UPDATE_TASK',
+                                               chunk_id=chunk_id,
+                                               task='propagated')
+        response = {'message': 'Successfully updated state to propagated'}
+        return jsonify(response), 201
     else:
         response = {'message': 'There is no state available'}
         return jsonify(response), 400
 
+
 @app.route('/get_chunks/unpropagated', methods=['GET'])
 def get_unpropagated_chunks():
     """
-    Get a list of unpropagated chunks
+    Get a list of un-propagated chunks
     :return: List of chunk ids
     """
     results = db_manager.get_first_n_built_chunk_ids(number_of_chunks)
@@ -217,9 +234,11 @@ def get_unpropagated_chunks():
         temp.append(chunk['chunk_id'])
     return jsonify(chunks=temp)
 
+
 """
     Index Builders' and Servers' Endpoints
 """
+
 
 @app.route("/set_state/index_chunk", methods=['POST'])
 def set_index_chunk_state():
@@ -229,17 +248,23 @@ def set_index_chunk_state():
     """
     message = request.get_json()
     if message['state'] == "built":
-        # Update content chunk state to 'built'
+        # Update index chunk state to 'built'
         db_manager.operate_on_index_builder_relation('UPDATE_TASK',
-                                                 chunk_id=message['chunk_id'],
-                                                 host=request.remote_addr,
-                                                 task=message['state'])
+                                                     chunk_id=message['chunk_id'],
+                                                     host=request.remote_addr,
+                                                     task=message['state'])
 
         # Assign content and index chunks to index servers after the index is built
         assign_index_chunk(rows, message['chunk_id'])
 
         response = {'message': 'Successfully updated state to built'}
         return jsonify(response), 201
+    elif message['state'] == "propagated":
+        # Update index chunk state to 'propagated'
+        db_manager.operate_on_index_builder_relation('UPDATE_TASK',
+                                                     chunk_id=message['chunk_id'],
+                                                     task=message['state'])
+
     else:
         response = {'message': 'There is no state available'}
         return jsonify(response), 400
@@ -254,13 +279,11 @@ def get_content_chunk():
     # Get the first number_of_chunks crawled chunk ids
     results = db_manager.get_first_n_crawled_chunks(number_of_chunks)
 
-    print(results)
     temp_chunks = []
     if len(results) != 0:
         for chunk in results:
-            temp_dict = {}
-            temp_dict['chunk_id'] = chunk['chunk_id']
-            temp_dict['host'] = chunk['c_host']
+            temp_dict = {'chunk_id': chunk['chunk_id'],
+                         'host': chunk['c_host']}
             temp_chunks.append(temp_dict)
 
             # Insert to index builder relation and mark chunk as 'building'
@@ -273,6 +296,7 @@ def get_content_chunk():
     else:
         return jsonify([])
 
+
 @app.route("/get_chunks", methods=['GET'])
 def get_chunks():
     """
@@ -280,10 +304,12 @@ def get_chunks():
     :return: List of dictionary of hosts, empty list if no chunks assigned
     """
     requester = request.remote_addr
+
     # Get all index servers for requester
     results = db_manager.get_chunk_hosts_for_index_servers(requester)
 
     return jsonify(results)
+
 
 @app.route("/get_map", methods=['GET'])
 def get_map():
@@ -299,17 +325,21 @@ def get_map():
         temp.append([])
     for server in index_servers:
         index_server_host = server['host']
+
         # Get chunk ids for a given Index Server's host
         temp_dict = db_manager.get_chunk_ids_for_index_server(host=index_server_host)
 
         if len(temp_dict) != 0:
             index = temp_dict['row'] - 1
-            temp[index].append({'host':temp_dict['host'],'chunk_id':temp_dict['chunk_ids']})
+            temp[index].append({'host': temp_dict['host'],
+                                'chunk_id': temp_dict['chunk_ids']})
     return temp
+
 
 """
     WatchDog's Endpoints
 """
+
 
 @app.route("/set_health", methods=['POST'])
 def set_health():
@@ -318,6 +348,7 @@ def set_health():
     :return: None
     """
     message = request.get_json()
+
     # Update the health status in the database
     db_manager.operate_on_host_relation('UPDATE_HEALTH',
                                         host=message['host'],
