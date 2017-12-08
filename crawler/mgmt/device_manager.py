@@ -20,7 +20,7 @@ class DeviceManager:
     def _set_state(self, state):
         self.log.info('Setting state to {}'.format(state))
         try:
-            url_str = 'http://{}/set_state/crawler:{}'.format(
+            url_str = 'http://{}:{}/set_state/crawler'.format(
                     self._address,
                     self._port
                     )
@@ -67,8 +67,11 @@ class DeviceManager:
             "chunks": [100, 101, 102]
         }
         """
-        resp = requests.get(
-                self._address + '/get_chunks/unpropagated'
+        resp = requesta.get(
+                'http://{}:{}/get_chunks/unpropagated'.format(
+                    self._address,
+                    self._port
+                    )
                 )
 
         chunks = resp.json['chunks']
@@ -91,7 +94,10 @@ class DeviceManager:
         }
         """
         resp = requests.post(
-                self._address + '/set_state/content_chunk',
+                'http://{}:{}/set_state/content_chunk'.format(
+                    self._address,
+                    self._port
+                    ),
                 data={
                     'chunk_id' : chunk_id,
                     'state'    : 'crawled'
@@ -111,7 +117,7 @@ class DeviceManager:
         else:
             state = 'error'
         resp = requests.post(
-                '{}/set_state/crawler:{}'.format(
+                'http://{}:{}/set_state/crawler'.format(
                     self._address,
                     self._port
                     ),

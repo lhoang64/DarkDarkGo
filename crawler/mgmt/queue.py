@@ -31,7 +31,7 @@ class QueueWrapper:
         self.log.debug('Requesting new chunk/links from management.')
 
         resp = requests.get(
-                '{}/get_links:{}'.format(self._address, self._port)
+                'http://{}:{}/get_links'.format(self._address, self._port)
                 )
 
         links = resp.json['links']
@@ -52,10 +52,10 @@ class QueueWrapper:
         Returns: a list of strings, each an onion link.
         """
         resp = requests.get(
-                '{}/get_links/{}:{}'.format(
+                'http://{}:{}/get_links/{}'.format(
                     self._address,
-                    n_links,
-                    self._port
+                    self._port,
+                    n_links
                     )
                 )
 
@@ -85,7 +85,10 @@ class QueueWrapper:
                 )
 
         resp = requests.post(
-                self._address + '/add_links',
+                'http://{}:{}/add_links'.format(
+                    self._address,
+                    self._port
+                    ),
                 data={'links' : links}
                 )
 
