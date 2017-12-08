@@ -152,7 +152,7 @@
 ### Front-End
 
 **Get server map periodically**
-- URL: `/get_map/index_servers`
+- URL: `/get_map`
 - Method: `GET`
 - Sample data:
 
