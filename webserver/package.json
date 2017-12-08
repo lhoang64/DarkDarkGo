@@ -1,0 +1,20 @@
+{
+  "name": "webserver",
+  "version": "1.0.0",
+  "description": "Web server for the react frontend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "keywords": [
+    "server"
+  ],
+  "author": "Sashank Aryal",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2",
+    "isomorphic-fetch": "^2.2.1",
+    "lru-cache": "^4.1.1"
+  }
+}

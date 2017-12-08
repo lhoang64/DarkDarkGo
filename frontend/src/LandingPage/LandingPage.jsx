@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import logoSpin from './logo_spin.png';
-import logoStatic from './logo_static.png';
+import logoStatic from './skull.png';
 
 import './LandingPage.css';
 
@@ -37,12 +36,12 @@ export default class LandingPage extends Component {
         <div className="App">
           <header className="App-header">
           <div className="logo-container">
-            <img src={logoSpin} className="App-logo-spin" alt="logoSpin" />
+            {/* <img src={logoSpin} className="App-logo-spin" alt="logoSpin" /> */}
             <img src={logoStatic} className="App-logo-static" alt="logoStatic" />
           </div>
             </header>
           <div className="search-bar">
-              <input id="search-box" onChange={(e)=>{this.changeQuery(e.target.value)}} placeholder="Search the dark net" value={this.state.query}/>
+              <input id="search-box" onKeyPress={(e)=>{if (e.key === 'Enter') this.handleSearch()}} onChange={(e)=>{this.changeQuery(e.target.value)}} placeholder="Search the dark net" value={this.state.query}/>
           </div>
           <div className="buttons">
               <button id="search-btn" className="btnsearch" onClick={() => this.handleSearch()}> Search </button>
