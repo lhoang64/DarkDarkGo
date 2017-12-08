@@ -123,7 +123,7 @@
 **Get content chunk metadata, index chunk metadata for that given Index Server**
 - URL: `/get_chunks`
 - Method: `GET`
-- Return:  5 chunks metadata each request
+- Return:  All chunks metadata each request
 - Sample data:
 ```
 [
