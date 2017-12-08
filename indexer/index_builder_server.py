@@ -30,6 +30,6 @@ def get_content_chunk(chunk_id):
 '''
     GET health status for Mgmt
 '''
-@app.route('/get_health_status', methods=['GET'])
+@app.route('/get_health', methods=['GET'])
 def is_healthy():
     return True

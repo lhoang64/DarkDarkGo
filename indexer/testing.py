@@ -18,7 +18,7 @@ online = requests.post('http://{0}:5000/set_state/component'.format(mgmt_ip_addr
 print(online.json())
 
 # Test Endpoint 2: Get content chunk metadata from Mgmt
-metadata = requests.get('http://{0}:5000/get_content_chunk_metadata'.format(mgmt_ip_addr))
+metadata = requests.get('http://{0}:5000/get_metadata/content_chunk'.format(mgmt_ip_addr))
 print(metadata.json())
 
 chunk_ids = []
