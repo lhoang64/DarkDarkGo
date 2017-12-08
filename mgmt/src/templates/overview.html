@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!--CSS starts-->
+    <style>
+        .card-block {
+          margin: 15px;
+        }
+    </style>
+
+    <!--CSS ends-->
+
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--Reload page every 30 secs-->
+    <!--<meta http-equiv="refresh" content="30">-->
+
+    <title>Overview</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="container">
+        {% if data %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Links</th>
+                        <th scope="col">Crawler</th>
+                        <th scope="col">Index Server</th>
+                        <th scope="col">Index Builders</th>
+                    </tr>
+                </thead>
+                {% for entry in data %}
+                <tbody>
+                    <tr>
+                        <!--chunk_id-->
+                        <th scope="row">{{entry['chunk_id']}}</th>
+                        <!--links-->
+                        <td>
+                            {% if entry['links'] == [] %}
+                                None
+                            {% else %}
+                                {% for item in entry['links'] %}
+                                    <p> {{ item['link'] }} </p>
+                                    <p> {{ item['state'] }} </p>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <!--crawler-->
+                        <td>
+                            {% if entry['crawler'] == [] %}
+                                None
+                            {% else %}
+                                {% for item in entry['crawler'] %}
+                                    <p> {{ item['c_host'] }} </p>
+                                    <p> {{ item['c_task'] }} </p>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <!--index_builder-->
+                        <td>
+                            {% if entry['index_builder'] == [] %}
+                                None
+                            {% else %}
+                                {% for item in entry['index_builder'] %}
+                                    <p> {{ item['ib_host'] }} </p>
+                                    <p> {{ item['ib_task'] }} </p>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <!--index_server-->
+                        <td>
+                            {% if entry['index_server'] == [] %}
+                                None
+                            {% else %}
+                                {% for item in entry['index_server'] %}
+                                    <p> Row {{ item['row'] }} : {{ item['is_host'] }} </p>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="jumbotron">
+                <h1 class="display-3">There is no data available!</h1>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+</body>
+</html>
