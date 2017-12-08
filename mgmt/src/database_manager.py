@@ -17,11 +17,11 @@ HOST = 'localhost'
 class DatabaseManager():
     def operate_on_link_relation(self, function, link, chunk_id=None, state='pending'):
         """
-        Execute basic operations on link relation.
-        - INSERT: Insert a given link and chunk id. Default chunk id is None state is pending.
-        - UPDATE_STATE: Update chunk id for a given link.
-        - UPDATE_STATE: Update state for a given link.
-        - DELETE: Delete a given link.
+        Execute basic operations on link relation
+        - INSERT: Insert a given link and chunk id. Default chunk id is None state is pending
+        - UPDATE_STATE: Update chunk id for a given link
+        - UPDATE_STATE: Update state for a given link
+        - DELETE: Delete a given link
         :param function: INSERT | UPDATE_CHUNK_ID | UPDATE_STATE | DELETE
         :param link: URL
         :param state: OK | Error
@@ -49,9 +49,9 @@ class DatabaseManager():
 
     def operate_on_chunk_relation(self, function, chunk_id):
         """
-        Execute basic operations on chunk relation.
-        - INSERT: Insert a given chunk id. Default state is None.
-        - DELETE: Delete a given chunk id.
+        Execute basic operations on chunk relation
+        - INSERT: Insert a given chunk id. Default state is None
+        - DELETE: Delete a given chunk id
         :param function: INSERT | DELETE
         :param chunk_id: Chunk ID
         :param state: OK | Error
@@ -75,11 +75,11 @@ class DatabaseManager():
 
     def operate_on_host_relation(self, function, host, type=None, state='offline', health=None):
         """
-        Execute basic operations on host relation.
-        - INSERT: Insert a given host and type. Default state is offline and health is None.
-        - UPDATE_STATE: Update state for a given host.
-        - UPDATE_HEALTH: Update health for a given host.
-        - DELETE: Delete a given host.
+        Execute basic operations on host relation
+        - INSERT: Insert a given host and type. Default state is offline and health is None
+        - UPDATE_STATE: Update state for a given host
+        - UPDATE_HEALTH: Update health for a given host
+        - DELETE: Delete a given host
         :param function: INSERT | UPDATE_STATE | UPDATE_HEALTH | DELETE
         :param host: Host
         :param type: Crawler | Index Builder | Index Server
@@ -109,10 +109,10 @@ class DatabaseManager():
 
     def operate_on_crawler_relation(self, function, chunk_id, host=None, task='crawling'):
         """
-        Execute basic operations on crawler relation.
-        - INSERT: Insert a given chunk_id and host. Default task is crawling.
-        - UPDATE_TASK: Update task for a given chunk_id.
-        - DELETE: Delete a given chunk_id.
+        Execute basic operations on crawler relation
+        - INSERT: Insert a given chunk_id and host. Default task is crawling
+        - UPDATE_TASK: Update task for a given chunk_id
+        - DELETE: Delete a given chunk_id
         :param function: INSERT | UPDATE_TASK | DELETE
         :param chunk_id: Chunk ID
         :param host: Host
@@ -141,10 +141,10 @@ class DatabaseManager():
 
     def operate_on_index_builder_relation(self, function, chunk_id, host=None, task='building'):
         """
-        Execute basic operations on index builder relation.
-        - INSERT: Insert a given chunk_id and host. Default task is building.
-        - UPDATE_TASK: Update task for a given chunk_id.
-        - DELETE: Delete a given chunk_id.
+        Execute basic operations on index builder relation
+        - INSERT: Insert a given chunk_id and host. Default task is building
+        - UPDATE_TASK: Update task for a given chunk_id
+        - DELETE: Delete a given chunk_id
         :param function: INSERT | UPDATE_TASK | DELETE
         :param chunk_id: Chunk ID
         :param host: Host
@@ -173,12 +173,12 @@ class DatabaseManager():
 
     def operate_on_index_server_relation(self, function, row, chunk_id, host):
         """
-        Execute basic operations on index server relation.
-        - INSERT: Insert a given row, chunk id and host.
-        - UPDATE_ALL: Update a record for a given row, chunk id, and host.
-        - UPDATE_ROW: Update row (column) for a given chunk id and host.
-        - UPDATE_CHUNK_ID: Update chunk id for a given row and host.
-        - UPDATE_HOST: Update host for a given row and chunk id.
+        Execute basic operations on index server relation
+        - INSERT: Insert a given row, chunk id and host
+        - UPDATE_ALL: Update a record for a given row, chunk id, and host
+        - UPDATE_ROW: Update row (column) for a given chunk id and host
+        - UPDATE_CHUNK_ID: Update chunk id for a given row and host
+        - UPDATE_HOST: Update host for a given row and chunk id
         :param function: INSERT | UPDATE ROW | UPDATE CHUNK_ID | UPDATE_HOST | DELETE
         :param chunk_id: Chunk ID
         :param row: Row number
@@ -209,7 +209,7 @@ class DatabaseManager():
 
     def get_relation(self, relation_name):
         """
-        Get all records for a given relation.
+        Get all records for a given relation
         :param relation_name: Relation name
         :return: List of dictionary
         """
@@ -225,8 +225,8 @@ class DatabaseManager():
 
     def get_relation_for_chunk_id(self, relation_name, chunk_id):
         """
-        Return all results in a given relation for a specific chunk id.
-        For example:
+        Return all results in a given relation for a specific chunk id
+        Example:
             - get_relation_for_chunk_id(relation_name='crawler', 101) returns crawler's host for chunk id 101
             - get_relation_for_chunk_id(relation_name='index_builder', 101) returns index builder's host for chunk id 101
         :param chunk_id: Chunk ID
@@ -244,7 +244,7 @@ class DatabaseManager():
 
     def get_all_relations_for_all_chunks(self):
         """
-        Return all relations for all chunks in chunk relation.
+        Return all relations for all chunks in chunk relation
         :return: List of dictionary
         """
         results = []
@@ -265,12 +265,11 @@ class DatabaseManager():
             temp_dict['index_server'] = index_server
 
             results.append(temp_dict)
-
         return results
 
     def get_relation_length(self, relation_name):
         """
-        Return length of a given relation.
+        Return length of a given relation
         :param relation_name: Relation name
         :return: Int
         """
@@ -286,7 +285,7 @@ class DatabaseManager():
 
     def get_first_n_pending_links(self, number):
         """
-        Get first numbers of pending links.
+        Get the first number pending links
         :param number: Number of links
         :return: List of dictionary
         """
@@ -300,16 +299,16 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def get_first_n_crawled_chunk_ids(self, number):
+    def get_first_n_crawled_chunks(self, number):
         """
-        Get first numbers of crawled chunk ids
+        Get the first number crawled chunk ids
         :param number: Number of chunk ids
         :return: List of dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            cur.execute("SELECT chunk_id FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT %s;", (number,))
+            cur.execute("SELECT * FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
             cur.close()
             return results
@@ -318,7 +317,7 @@ class DatabaseManager():
 
     def get_first_n_built_chunk_ids(self, number):
         """
-        Get first numbers of built chunk ids
+        Get the first number built chunk ids
         :param number: Number of chunk ids
         :return: List of dictionary
         """
@@ -379,9 +378,9 @@ class DatabaseManager():
 
     def get_chunk_hosts_for_index_servers(self, host):
         """
-        Get all index servers for a given host.
-        :param host:
-        :return: List of dictionary.
+        Get all index servers for a given host
+        :param host: Host url of the index server
+        :return: List of dictionary
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -405,7 +404,8 @@ class DatabaseManager():
 
     def get_chunk_id_for_link(self, link):
         """
-        Get chunk id for a given link.
+        Get chunk id for a given link
+        :param link: String of the link
         :return: Link as a dictionary
         """
         try:
@@ -420,7 +420,7 @@ class DatabaseManager():
 
     def get_links_for_chunk_id(self, chunk_id):
         """
-        Get all crawling links available for a given chunk id.
+        Get all crawling links available for a given chunk id
         :param chunk_id: Chunk ID
         :return: List of dictionary
         """
@@ -438,7 +438,7 @@ class DatabaseManager():
         """
         Get chunk ids for a given Index Server's host
         :param host: Host
-        :return:
+        :return: Dictionary of index server host and its chunk ids
         """
         try:
             conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
@@ -447,7 +447,7 @@ class DatabaseManager():
             results = cur.fetchall()
 
             if results == []:
-                return []
+                return {}
 
             temp_dict = {}
             temp_dict['host'] = host
