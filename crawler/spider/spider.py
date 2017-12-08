@@ -4,6 +4,7 @@
     Nov, 28, 2017 - Matt Jones matthewjones@bennington.edu
 """
 import re
+import logging
 
 from bs4 import BeautifulSoup
 from requests import exceptions
@@ -61,8 +62,9 @@ class Spider:
             self.spider_err = True
             return
 
+        self.log.info('successfully connected to {}'.format(self.link))
         self.body = resp.text
-        soup = BeautifulSoup(self.text, 'html.parser')
+        soup = BeautifulSoup(self.body, 'html.parser')
         self.title = soup.title
         self._find_links(soup)
 

@@ -36,6 +36,7 @@ class Crawler:
         self.chunk_id    = ''
         self.log = logging.getLogger()
         self.running = Event() # TODO Maybe wrap this?
+        self.running.set()
 
         if self._declare_online():
             self.log.info('Crawler initialized successfully!')
@@ -56,7 +57,7 @@ class Crawler:
         spider = Spider(
                 link,
                 self.user_agent,
-                get_tor_session()
+                get_tor_session(9150)
                 )
         spider.crawl()
         self._manager.mark_link_crawled(link, spider.success)
@@ -98,25 +99,35 @@ class Crawler:
         pass
 
     def run(self):
+        self.log.debug('crawler.run() called!')
         # TODO Find a more robust way of starting/stopping and keeping track.
-        while self.running.wait():
-            links, chunk_id = self._manager.get_links()
-            self.log.info('starting new chunk: {}'.format(chunk_id))
-            self.chunk_id = chunk_id
-            if not links:
-                self.log.warning(
-                        "Didn't get any links from management, waiting for 60."
-                        )
-                self.running.clear()
-                self.running.wait(60)
-                self.running.set()
-                self.log.warning('Resuming crawler.')
-                continue
+        try:
+            while self.running.wait():
+                links, chunk_id = self._queue.get_links()
+                self.log.info('starting new chunk: {}'.format(chunk_id))
+                self.chunk_id = chunk_id
+                if not links:
+                    self.log.warning(
+                            "Didn't get any links from management, waiting for 60."
+                            )
+                    self.running.clear()
+                    self.running.wait(60)
+                    self.running.set()
+                    self.log.warning('Resuming crawler.')
+                    continue
 
-            # TODO Throttle this somehow.
-            pool = Pool(self.num_threads)
-            link_multilist = pool(self._crawl_link, links)
-            # The following line is an affront to god.
-            fresh_links = [link for sublist in mulit_list for link in sublist]
-            self._queue.add_links(fresh_links)
-            self._manager.alert_chunk(chunk_id)
+                # FIXME I can't get threading to work right now.
+                #pool = Pool(self.num_threads)
+                #link_multilist = pool.map(self._crawl_link, links)
+
+                mulit_list = []
+                for link in links:
+                    mulit_list.append(self._crawl_link(link))
+
+                # The following line is an affront to god.
+                fresh_links = [link for sublist in mulit_list for link in sublist]
+                self._queue.add_links(fresh_links)
+                self._manager.alert_chunk(chunk_id)
+        except:
+            self.log.exception('Uncaught error in crawler, stopping.')
+            # TODO: Tell mgmt that we hit an error.

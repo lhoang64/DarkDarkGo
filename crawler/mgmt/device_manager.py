@@ -74,11 +74,11 @@ class DeviceManager:
                     )
                 )
 
-        chunks = resp.json['chunks']
+        chunks = resp.json()['chunks']
 
         return chunks
 
-    def alert_chunk(chunk_id):
+    def alert_chunk(self, chunk_id):
         """
         Alerts mgmt that we are done this the chunk corresponding to chunk_id.
 
@@ -105,7 +105,7 @@ class DeviceManager:
                 )
         return resp.status_code == 200
 
-    def mark_link_crawled(link, success):
+    def mark_link_crawled(self,link, success):
         """
         Alert's management that `link` has been crawled, and does not need to
             be checked again. Uses the /add_crawled_link endpoint.

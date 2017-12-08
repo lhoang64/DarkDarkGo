@@ -34,8 +34,8 @@ class QueueWrapper:
                 'http://{}:{}/get_links'.format(self._address, self._port)
                 )
 
-        links = resp.json['links']
-        c_id = resp.json['chunk_id']
+        links = resp.json()['links']
+        c_id = resp.json()['chunk_id']
 
         return (links, c_id)
 
@@ -59,7 +59,7 @@ class QueueWrapper:
                     )
                 )
 
-        links = resp.json['links']
+        links = resp.json()['links']
         self.log.info(
                 'Requested {} more links from management, received {}.'
                 .format(n_links, len(links))

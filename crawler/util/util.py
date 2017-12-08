@@ -20,7 +20,7 @@ def get_tor_session(port):
     returns: a requests.session object.
     """
     proxies = {
-            'http': 'socks5://127.0.0.1:{}'.format(port)
+            'http': 'socks5h://127.0.0.1:{}'.format(port)
             }
 
     session = requests.Session()
