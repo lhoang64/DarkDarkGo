@@ -12,14 +12,16 @@ from mgmt.src.constants import number_of_rows
 
 id_counter = 0
 
+
 def generate_chunk_id():
     """
-    Generate chunk id as integer and concat with an alphabet 'c'.
+    Generate chunk id as integer and concat with an alphabet 'c'
     :return: String
     """
     global id_counter
     id_counter += 1
     return str(id_counter) + 'c'
+
 
 def distribute_index_servers():
     """
@@ -32,7 +34,7 @@ def distribute_index_servers():
     row_count = 1
     rows = []
 
-    k = 0   # the index in index_servers array
+    k = 0  # the index in index_servers array
     while number_of_index_servers > 0:
         for i in range(0, number_of_rows):
             servers_in_row = []
@@ -40,7 +42,9 @@ def distribute_index_servers():
                 servers_in_row.append(index_servers[k]['host'])
                 k += 1
                 number_of_index_servers -= 1
-            rows.append({'current_index': 0, 'row_num': row_count, 'row': servers_in_row})
+            rows.append({'current_index': 0,
+                         'row_num': row_count,
+                         'row': servers_in_row})
             row_count += 1
         for i in range(0, number_of_index_servers):
             rows[i]['row'].append(index_servers[k]['host'])
@@ -58,13 +62,13 @@ def assign_index_chunk(rows, chunk_id):
     """
     for row in rows:
         current_index = row['current_index']
-        print('current_index = {0}'.format(current_index))
+
         # if index reaches the last element, reset to 0
         row['current_index'] = current_index + 1
-        print('len = {0}'.format(len(row['row'])))
+
         if row['current_index'] >= len(row['row']):
             row['current_index'] = 0
-        db_manager.operate_on_index_server_relation('INSERT',row=row['row_num'], chunk_id=chunk_id, host=row['row'][current_index])
-        print(row['row'][current_index] + '\n')
-
-
+        db_manager.operate_on_index_server_relation(function='INSERT',
+                                                    row=row['row_num'],
+                                                    chunk_id=chunk_id,
+                                                    host=row['row'][current_index])
