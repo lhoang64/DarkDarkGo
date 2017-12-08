@@ -100,12 +100,8 @@ class Index_Builder:
         return indexed_words
 
     def run(self):
-        # Open content chunk to read 
-        with open('sample_files/content_files/' + self.content_chunk, encoding='utf-8') as data_file:
-            chunk_data = json.load(data_file)
-
-            indexed_words = self.index_builder(chunk_data)
-        data_file.close()
+        # Start indexing
+        indexed_words = self.index_builder(self.content_chunk)
 
         # Open new file to write indexed chunk into
         file_name = 'sample_files/indexed_files/indexed_' + self.chunk_id + '.json'
