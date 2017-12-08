@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 """
     watchdog.py - A watchdog service for the device manager. Sends heartbeats to every
             other component in the system and informs their status to the device manager.
@@ -7,15 +7,15 @@
     Date: 11/30/2017
 """
 from threading import Thread
-from database_manager import DatabaseManager
+from mgmt.src.database_manager import DatabaseManager as db_manager
 import requests
 import time
 
 class WatchDog(Thread):
     def __init__(self, thread_id, dm, hosts):
         """
-            :param dm: host url of device_manager
-            :param hosts: a list of hosts to ping for a watchdog
+        :param dm: host url of device_manager
+        :param hosts: a list of hosts to ping for a watchdog
         """
         Thread.__init__(self)
         self.thread_id = thread_id
@@ -23,10 +23,10 @@ class WatchDog(Thread):
         self.hosts = hosts
 
     def send_heartbeats(self):
-        dm_url = 'http://{0}/{1}/'.format(self.dm,'set_health')
+        dm_url = 'http://{0}/{1}'.format(self.dm,'set_health')
         while (len(self.hosts) > 0):
             for host in self.hosts:
-                component_url = 'http://{0}/{1}/'.format(host,'get_health')
+                component_url = 'http://{0}/{1}'.format(host,'get_health')
                 try:
                     r = requests.get(component_url)     # hit get_health endpoint on every component
                                                         # returns {'health':health_status}
@@ -37,7 +37,6 @@ class WatchDog(Thread):
             time.sleep(30)
 
     def run(self):
-        print('running thread {0}'.format(self.thread_id))
         for host in self.hosts:
             print('Watchdog {0} sending heartbeats to {1}'.format(self.thread_id, host))
         self.send_heartbeats()
@@ -46,7 +45,6 @@ def main():
     wd_num_items = 10
     thread_count = 0
     dm = '0.0.0.0:5000'
-    db_manager = DatabaseManager()
     host_relation = db_manager.get_relation('host')
 
     j = 0
