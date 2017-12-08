@@ -9,35 +9,29 @@
 
 """
 
+import requests
 from flask import Flask, jsonify, request
-import json
+from query_match import query_main
 
 app = Flask(__name__)
+s = requests.Session()
+
+# REMINDER: Change this mgmt IP address once Mgmt is set up
+mgmt_ip_addr = '172.10.10.18'
 
 # For management
-@app.route('/set_component_state', methods=['POST'])
-def index_server_online():
-    online = request.get_json()
-    return jsonify(online)
+s.post('http://{0}:5000/set_state/component'.format(mgmt_ip_addr), json={"state": "online"})
 
-# From management
-@app.route('/get_index_chunk_metadata', methods=['GET'])
-def add_chunk_metadata():
-    meta_json = open('chunk_metadata.json', 'r').read()
-    metadata = json.loads(meta_json)
-    return jsonify(metadata)
+@app.route('/get_health_status', methods=['GET'])
+def is_healthy():
+    return True
 
-# From Index Builder
-@app.route('/get_index_chunk_content', methods=['GET'])
-def get_index_chunk_content():
-    content_json = open('chunk_content.json', 'r').read()
-    content = json.loads(content_json)
-    return jsonify(content)
 
-# API for front-end
+# For front-end
 @app.route('/get_query/search?<string:querystring>', methods=['GET'])
 def get_query(querystring):
-    return str(querystring)
+    dict_of_ids = query_main(querystring)
+    return dict_of_ids
 
 @app.route('/get_snippet', methods=['POST'])
 def get_snippet():
