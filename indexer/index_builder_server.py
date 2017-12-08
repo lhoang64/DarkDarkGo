@@ -5,30 +5,27 @@
     Date: 12/01/2017
 """
 
-from flask import Flask, request, jsonify
-import json
+from flask import Flask, send_from_directory
 
 app = Flask(__name__)
+UPLOAD_FOLDER = 'sample_files/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 '''
     GET indexed chunk to Index Server
 '''
 @app.route('/indexed_chunk/<string:chunk_id>', methods=['GET'])
 def get_indexed_chunk(chunk_id):
-    file_name = 'sample_files/indexed_files/indexed_' + chunk_id + '.json'
-    indexed_data = open(file_name, encoding='utf-8').read()
-    indexed_chunk = json.loads(indexed_data)
-    return jsonify(indexed_chunk)
+    file_path = app.config['UPLOAD_FOLDER'] + 'indexed_files/'
+    return send_from_directory(file_path, chunk_id)
 
 '''
     GET content chunk to Index Server
 '''
 @app.route('/content_chunk/<string:chunk_id>', methods=['GET'])
 def get_content_chunk(chunk_id):
-    file_name = 'sample_files/content_files/' + chunk_id + '.json'
-    content_data = open(file_name, encoding='utf-8').read()
-    content_chunk = json.loads(content_data)
-    return jsonify(content_chunk)
+    file_path = app.config['UPLOAD_FOLDER'] + 'content_files/'
+    return send_from_directory(file_path, chunk_id)
 
 '''
     GET health status for Mgmt
