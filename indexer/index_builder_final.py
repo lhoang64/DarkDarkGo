@@ -55,7 +55,11 @@ class Index_Builder:
             # Array containing tuples of word + word_count + entry_id
             entry_array = []
             for word in all_unique_words_in_one_entry:
-                word_tuple = (word, word_count_in_entry[word], entry["doc_id"])
+                word_positions = []
+                for pos, w in enumerate(all_words_in_one_entry):
+                    if w == word:
+                        word_positions.append(pos)
+                word_tuple = (word, word_count_in_entry[word], entry["doc_id"], word_positions)
                 entry_array.append(word_tuple)
 
             entries += entry_array
@@ -86,12 +90,12 @@ class Index_Builder:
                 for tup in entries:
                     if word == tup[0]:
                         entry_ids.append(tup[1:])
-                        # within each tuple (word_count + entry_id),
-                        # rank each document url based on the frequency of word in that document
-                        doc_ids = []
+                        # within each tuple (word_count + entry_id + word_positions),
+                        # rank each document id based on the frequency of word in that document
+                        doc_ids = {}
                         for en_id in sorted(entry_ids, reverse=True):
-                            doc_ids.append(en_id[1])
-                        # the value of key 'urls' is now ranked
+                            doc_ids[en_id[1]] = en_id[2]
+                        # the value of key 'doc_ID' is now ranked
                         indexed_word_info['doc_ID'] = doc_ids
 
             if indexed_word_info:
