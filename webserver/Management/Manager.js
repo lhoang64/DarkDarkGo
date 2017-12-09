@@ -47,6 +47,8 @@ module.exports = Manager =
     },
 
     stop : () => {
-        Cacher.dumpCacheToPersistence()
+        if (Cacher.intervalid)
+            clearInterval(Cacher.intervalid)
+        Cacher.dumpCacheToPersistenceSync()
     }
 }
