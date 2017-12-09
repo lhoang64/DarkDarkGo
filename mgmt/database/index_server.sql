@@ -1,0 +1,5 @@
+-- -----------------------------------------------------
+-- Add sample data to index_server relation
+-- Author: Hoanh An (hoanhan@bennington.edu)
+-- Date: 12/2/17
+-- -----------------------------------------------------
