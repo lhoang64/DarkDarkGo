@@ -29,7 +29,7 @@ export default class SearchPage extends React.Component {
             const url = window.location.href
             let query = queryParser.getQueryString('q',url)
             query = query.replace(/[|&;$@"<>()+,]/g, " ").replace(/%20/g,' ')
-            const offset = queryParser.getQueryString('offset',url)
+            const offset = parseInt(queryParser.getQueryString('offset',url))
             this.setState(() => {
                 return {query: query, searchOffset: offset}
             }, this.search(query, offset));
