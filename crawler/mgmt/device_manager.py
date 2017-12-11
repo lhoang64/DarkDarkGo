@@ -20,7 +20,7 @@ class DeviceManager:
     def _set_state(self, state):
         self.log.info('Setting state to {}'.format(state))
         try:
-            url_str = 'http://{}:{}/set_state/crawler'.format(
+            url_str = 'http://{}:{}/set_state/component'.format(
                     self._address,
                     self._port
                     )
@@ -67,7 +67,7 @@ class DeviceManager:
             "chunks": [100, 101, 102]
         }
         """
-        resp = requesta.get(
+        resp = requests.get(
                 'http://{}:{}/get_chunks/unpropagated'.format(
                     self._address,
                     self._port
@@ -117,7 +117,7 @@ class DeviceManager:
         else:
             state = 'error'
         resp = requests.post(
-                'http://{}:{}/set_state/crawler'.format(
+                'http://{}:{}/set_state/link'.format( # formerly crawler
                     self._address,
                     self._port
                     ),

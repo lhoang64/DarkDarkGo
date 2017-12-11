@@ -39,6 +39,7 @@ class QueueWrapper:
 
         return (links, c_id)
 
+    # TODO: remove this, no longer implemmented in mgmt
     def get_n_links(self, n_links):
         """
         Requests n more links from the queue. This should only be used to fill
