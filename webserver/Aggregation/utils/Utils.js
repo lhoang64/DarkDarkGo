@@ -1,6 +1,10 @@
 module.exports = {
     getChunkIdsForDocIds: (docIdArr) => {
-
+        let chunkIdArr = []
+        for (let docid of docidArr) {
+            chunkIdArr.push(docid.split('-')[0])
+        }
+        return chunkIdArr
     },
 
     getDocIdInRange: (docIdArr, offset) => {
