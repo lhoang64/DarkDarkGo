@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# encoding utf-8
 
 """
     index_server.py -
@@ -20,8 +19,9 @@ crawler_ip_addr = '192.10.10.18'
 index_builder_ip_addr = '192.10.10.19'
 
 # From Management
+# REMINDER: Change the path later
 with open("index_chunk_metadata.txt") as outfile:
-    get_index_chunk_metadata = s.get('http://{0}:5000/get_chunks_metadata'.format(mgmt_ip_addr))  # list of dicts
+    get_index_chunk_metadata = s.get('http://{0}:5000/get_chunks'.format(mgmt_ip_addr))  # list of dicts
 #     [{
 #         "chunk_id": "101c",
 #         "hosts": {
