@@ -41,12 +41,16 @@ exports.handleQuery = (req, res) => {
     if (Manager.indexServers.empty || Manager.indexServers.map.length == 0 || Manager.indexServers.inversemap.length == 0) {
         returnError(res, "No index servers online")
     } else {
-        Aggregator.getResultsFromIndexServer(queryString, offset, (success, error) => {
+        Aggregator.getResultsFromIndexServer(queryString, offset, (results, error) => {
             if (error) {
                 returnError(res, error)
             }
             else {
-                res.json(success)                
+                res.json({
+                    head: 'success',
+                    totalResults: results.totalResult,
+                    message: results.content
+                })                
             }
         })}
 }
