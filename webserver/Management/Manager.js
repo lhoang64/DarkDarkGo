@@ -16,7 +16,7 @@ module.exports = Manager = {
     start: () => {
         Cacher.initializeCache()
         // Repopulate it every 1 minute
-        //Manager.intervalid = setInterval(Manager.populateIndexServers(), 1000 * 60);
+        Manager.intervalid = setInterval(Manager.populateIndexServers, 1000 * 60);
     },
 
     indexServers: {
@@ -59,6 +59,7 @@ module.exports = Manager = {
                 })
             })
         })
+        Manager.indexServers.inversemap = temp
     },
 
     stop: () => {
