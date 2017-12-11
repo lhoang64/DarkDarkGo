@@ -3,6 +3,7 @@
     Nov, 28, 2017 - Matt Jones matthewjones@bennington.edu
 """
 import logging
+import os
 from multiprocessing import Pool
 from threading import Event
 from time import sleep
