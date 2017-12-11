@@ -11,34 +11,49 @@ class Chunk:
     def __init__(self, chunk_id):
         self.chunk_id = chunk_id
         self.header = []
-        self.path = './{}'.format(chunk_id) # '/data/{0}'.format(chunk_id)
+        self.path = './{}'.format(chunk_id)  # '/data/{0}'.format(chunk_id)
+        self.documents = []
 
     def create_chunk(self):
         """
-        Given a chunk_id, create a new chunk
+        Given a chunk_id, create a new chunk file
         :return: none
         """
         new_chunk = open(self.path, 'wb')
         new_chunk.close()
 
-    def append_to_chunk(self, link, title, html):
+    def append_to_chunk(self):
         """
-        Append document to chunk, data appended includes document_header and crawler data.
-        :param link: string
-        :param title: string
-        :param html: string
+        Append documents to chunk, data appended includes document_header and crawler data.
         :return: none
         """
         if os.path.exists(self.path):
             with open(self.path, 'ab') as f:
-                data = link + title + html
-                bin_data = data.encode('utf-8')
-                doc_header = self.__compute_doc_header(link, title, html)
-                for b_value in doc_header:
-                    f.write(b_value)    # append document header to chunk
-                f.write(bin_data)       # append document data to chunk
+                for document in self.documents:
+                    f.write(document['doc_header'])
+                    f.write(document['doc_data'])
         else:
             raise Exception('Chunk does not exist')
+
+    def create_document(self, link, title, html):
+        """
+        Create document, append document to list for to be writen to chunk one all docs have been created.
+        :param link: string
+        :param title: string
+        :param html: string
+        :return: list of documents
+        """
+        data = link + title + html
+        bin_data = data.encode('utf-8')
+        doc_header = self.__compute_doc_header(link, title, html)
+        document = {'doc_header': doc_header, 'doc_data': bin_data}
+        if len(self.documents) < 5:
+            self.documents.append(document)
+        else:
+            # TODO: Move extra documents to new chunk
+            # for now if crawler tries to add too many documents to a chunk an exception is raised
+            raise Exception('Max document count exceeded for chunk {}. Cannot append ')
+        return self.documents
 
     def append_header_to_chunk(self):
         """
@@ -61,10 +76,9 @@ class Chunk:
         :param doc_int_value: 0-4 int value
         :return: list contain byte objects
         """
-        f = open(self.path, 'rb')
-        f.seek(0, 2)
-        file_size = f.tell()
-        f.close()
+        file_size = 0
+        for document in self.documents:
+            file_size += len(document['doc_header']) + len(document['document_data'])
         doc_start_offset = file_size.to_bytes(3, byteorder='big')
         bin_doc_int = doc_int_value.to_bytes(1, byteorder='big')
         header_val = [bin_doc_int, doc_start_offset]
@@ -81,10 +95,9 @@ class Chunk:
         :param html: string
         :return: array of byte objects
         """
-        f = open(self.path, 'rb')
-        f.seek(0, 2)            # seek to end of file
-        file_size = f.tell()    # length of file content before new doc addition
-        f.close()
+        file_size = 0
+        for document in self.documents:
+            file_size += len(document['doc_header']) + len(document['document_data'])
 
         doc_header_length = 14
         doc_length = len(link) + len(title) + len(html)

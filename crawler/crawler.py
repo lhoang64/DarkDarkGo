@@ -49,9 +49,34 @@ class Crawler:
         """
         return self._manager.alert_online()
 
-    def _add_to_chunk(self, link, html, title):
-        # TODO Impliment this once Linh makes the API available.
-        pass
+    def _create_chunk(self):
+        """
+        Instantiate chunk object for crawler to use to create headers and documents. Create chunk file to be writen to.
+        :return: Chunk object
+        """
+        self.chunk = Chunk(self.chunk_id)
+        self.chunk.create_chunk()
+        return self.chunk
+
+    def _create_document(self, link, html, title):
+        """
+        Used by spiders crawling and scraping links to create documents to be added to chunk
+        :param link: string
+        :param html: string
+        :param title: string
+        :return: none
+        """
+        self.chunk.compute_file_header_value(len(self.chunk.header))
+        self.chunk.create_document(link, html, title)
+
+    def _add_to_chunk(self):
+        """
+        Called when all spiders done crawling links in that session(5 links). Write all documents to chunks.
+        Then write header(footer) to chunk.
+        :return: none
+        """
+        self.chunk.append_to_chunk()
+        self.chunk.append_header_to_chunk()
 
     def _crawl_link(self, link):
         spider = Spider(
@@ -62,11 +87,11 @@ class Crawler:
         spider.crawl()
         self._manager.mark_link_crawled(link, spider.success)
         if spider.success:
-            self._add_to_chunk(
-                    link,
-                    spider.html,
-                    spider.title
-                    )
+            self._create_document(
+                link,
+                spider.html,
+                spider.title
+            )
             return spider.links
         else:
             return []
@@ -90,13 +115,12 @@ class Crawler:
 
     def get_chunks(self):
         """
-        Method to return a list of chunks stored on the crawler, lists all
+        Called on a crawler instance, Method to return a list of chunks stored on the crawler, lists all
             chunks stored, including WIP chunks.
-
-        Returns: [chunk_id]
         """
-        # TODO Impliment this.
-        pass
+        path = '/data'
+        chunks = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+        return chunks
 
     def run(self):
         self.log.debug('crawler.run() called!')
@@ -106,6 +130,7 @@ class Crawler:
                 links, chunk_id = self._queue.get_links()
                 self.log.info('starting new chunk: {}'.format(chunk_id))
                 self.chunk_id = chunk_id
+                self._create_chunk()  # create chunk object when crawler starts
                 if not links:
                     self.log.warning(
                             "Didn't get any links from management, waiting for 60."
@@ -126,6 +151,7 @@ class Crawler:
 
                 # The following line is an affront to god.
                 fresh_links = [link for sublist in mulit_list for link in sublist]
+                self._add_to_chunk()
                 self._queue.add_links(fresh_links)
                 self._manager.alert_chunk(chunk_id)
         except:

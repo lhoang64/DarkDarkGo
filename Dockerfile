@@ -20,5 +20,7 @@ RUN mkdir /data
 
 RUN pip3 install -r dependencies.txt
 
+EXPOSE 5000
+
 CMD ["/app/crawler/crawler_script.sh"]
 
