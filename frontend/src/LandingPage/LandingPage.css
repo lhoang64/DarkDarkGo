@@ -2,12 +2,8 @@
 .App {
   text-align: center;
   height: 100%;
-}
-
-.App-logo-spin {
-  animation: App-logo-spin infinite 20s linear;
-  height: 350px;
-  position: absolute;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo-static {
@@ -31,11 +27,6 @@
 
 .App-intro {
   font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 .buttons {
@@ -94,4 +85,23 @@ select:focus,
 textarea:focus,
 button:focus {
     outline: none;
+}
+
+.suggestions_one {
+  list-style-type: none;
+  margin-top: 1px;
+  width: 65%;
+  border-radius: 4px;
+  padding: 0 0 10px 10px;
+  max-width: 830px;
+  align-self: center;
+  background-color: #ffffff;
+}
+
+.suggestion_one {
+  height: 0.5em;
+  padding: 10px 0 10px 10px;
+  color: #5d9062;
+  cursor: pointer;
+  text-align: left;
 }

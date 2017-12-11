@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import logoStatic from './skull.png';
+import Suggestions from '../SearchPage/Components/Suggestions/Suggestion'
 
 import './LandingPage.css';
+
+const API_SERVER_CACHE_ENDPOINT = "http://localhost:8010/searchcache?q="
 
 export default class LandingPage extends Component {
 
   constructor(props) {
       super(props);
       this.state = {
-        query: ""
+        query: "",
+        suggestions: []
       }
+  }
+
+  componentDidMount() {
+    document.getElementById("search-box").focus();    
   }
 
   handleSearch = () => {
@@ -27,11 +35,29 @@ export default class LandingPage extends Component {
         return {query: val}
       }, () => {
         //Prefetch and display suggestions
+        if (val.length > 0) {
+          fetch(API_SERVER_CACHE_ENDPOINT+this.state.query)
+          .then((response) => response.json())
+          .then((responsejson) => {
+              this.setState({suggestions: responsejson})
+          })
+        } else {
+            this.setState({suggestions: []})
+        }
       }
     );
   }
 
   render() {
+    let suggestions = undefined
+    if (this.state.suggestions) {
+      suggestions = this.state.suggestions.map((suggestion, index) => {
+          return (
+              <li className="suggestion_one" key={suggestion} onClick={()=>this.changeQuery(suggestion)}> {suggestion} </li>
+          )
+      })
+  }
+
     return (
         <div className="App">
           <header className="App-header">
@@ -43,15 +69,12 @@ export default class LandingPage extends Component {
           <div className="search-bar">
               <input id="search-box" onKeyPress={(e)=>{if (e.key === 'Enter') this.handleSearch()}} onChange={(e)=>{this.changeQuery(e.target.value)}} placeholder="Search the dark net" value={this.state.query}/>
           </div>
+          <Suggestions className="suggestions_one" suggestions={suggestions} />
           <div className="buttons">
               <button id="search-btn" className="btnsearch" onClick={() => this.handleSearch()}> Search </button>
               <button id="iamnotfeelinglucky" className="btnsearch" onClick={()=>{window.location = "https://www.google.com/"}}> I'm not feeling lucky </button> 
           </div>
         </div>
     );
-  }
-
-  componentDidMount() {
-    document.getElementById("search-box").focus();    
   }
 }
