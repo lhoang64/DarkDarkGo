@@ -2,7 +2,7 @@ module.exports = {
     getChunkIdsForDocIds: (docIdArr) => {
         let chunkIdArr = []
         for (let docid of docidArr) {
-            chunkIdArr.push(docid.split('-')[0])
+            chunkIdArr.push(docid.id.split('-')[0])
         }
         return chunkIdArr
     },
