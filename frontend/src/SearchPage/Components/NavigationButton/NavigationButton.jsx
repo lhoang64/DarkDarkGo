@@ -1,5 +1,8 @@
 import React from 'react'
 
+import NextButton from 'react-icons/lib/md/arrow-forward'
+import PrevButton from 'react-icons/lib/md/arrow-back'
+
 export default (props) => {
     if (props.offset === 0){
         // Return Next button
@@ -14,13 +17,9 @@ export default (props) => {
     // Return both Next and Prev button
     return (
     <div className="offsetButtons">
-        <button className="previousButton" onClick={()=>props.changeOffsetBy(-1)}>
-            Previous
-        </button>
-        <button className="nextButton" onClick={()=>props.changeOffsetBy(1)}>
-            Next
-        </button>
-        </div>
+        <PrevButton className="previousButton" onClick={()=>props.changeOffsetBy(-1)} />
+        <NextButton className="nextButton" onClick={()=>props.changeOffsetBy(1)} />
+    </div>
     )
     
 }

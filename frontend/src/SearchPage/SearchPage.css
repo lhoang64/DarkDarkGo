@@ -71,3 +71,33 @@
 .hidden {
     display: none;
 }
+
+.offsetButtons{
+    margin-bottom: 1em;    
+}
+
+.previousButton {
+    color: white;
+    font-size: 3em;
+    margin-left: 1em;
+    cursor: pointer;
+}
+
+.previousButton:hover {
+    transform: scale(1.1,1.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.nextButton {
+    color: white;
+    right: 20vw;
+    font-size: 3em;
+    position: absolute;
+    cursor: pointer;
+}
+
+
+.nextButton:hover {
+    transform: scale(1.1,1.2);
+    transition: all 0.2s ease-in-out;
+}
