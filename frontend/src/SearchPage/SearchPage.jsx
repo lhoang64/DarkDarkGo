@@ -138,7 +138,7 @@ export default class SearchPage extends React.Component {
                         <input id="search-box" onKeyPress={(e)=>{if (e.key === 'Enter') this.handleSearch()}} onChange={(e)=>{this.changeQuery(e.target.value)}} placeholder="Search the dark net" value={this.state.query}/>
                     </div>
 
-                    <Suggestions suggestions={suggestions} />
+                    <Suggestions className="suggestions_one" suggestions={suggestions} />
 
                     <div className="searchresults">
                         {searchResultsHtml}

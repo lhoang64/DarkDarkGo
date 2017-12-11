@@ -41,6 +41,33 @@
     margin-bottom: 2em;
 }
 
+#searchpage {
+    display: flex;
+    flex-direction: column;
+}
+
 #searchpage > .search-bar > #search-box {
-    margin-left: 10vw;
+    margin-left: 12vw;
+}
+
+.suggestions {
+    list-style-type: none;
+    margin-left: 12vw;
+    margin-top: 1px;
+    width: 39%;
+    border-radius: 4px;
+    padding: 0 0 10px 10px;
+    max-width: 830px;
+    background-color: #ffffff; 
+}
+
+.suggestion {
+    height: 0.5em;
+    padding: 10px 0 10px 10px;
+    color: #5d9062;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
 }
