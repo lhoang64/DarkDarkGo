@@ -6,9 +6,6 @@ const Manager = require('../Management/Manager')
 let fetch = require("isomorphic-fetch")
 let utils = require("./utils/Utils.js")
 
-const INDEX_SERVER_DOCID_ENDPOINT = ""
-const INDEX_SERVER_SNIPPET_ENDPOINT = ""
-
 module.exports = Aggregator = 
 {
     getResultsFromIndexServer : (query, offset, callback) => {
