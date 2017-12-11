@@ -12,6 +12,7 @@ from spider.spider import Spider
 from mgmt.queue import QueueWrapper
 from mgmt.device_manager import DeviceManager
 from util.util import get_tor_session
+from crawler.chunk import Chunk
 
 
 class Crawler:

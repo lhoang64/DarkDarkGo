@@ -90,7 +90,7 @@ class QueueWrapper:
                     self._address,
                     self._port
                     ),
-                data={'links' : links}
+                json={'links' : links}
                 )
 
-        return resp.status_code == 200
+        return resp.status_code in [200, 201]

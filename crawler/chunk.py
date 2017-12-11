@@ -11,7 +11,7 @@ class Chunk:
     def __init__(self, chunk_id):
         self.chunk_id = chunk_id
         self.header = []
-        self.path = './{}'.format(chunk_id)  # '/data/{0}'.format(chunk_id)
+        self.path = '/data/{0}'.format(chunk_id)  # './{}'.format(chunk_id)
         self.documents = []
 
     def create_chunk(self):

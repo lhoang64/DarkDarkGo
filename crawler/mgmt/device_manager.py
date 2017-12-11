@@ -25,8 +25,8 @@ class DeviceManager:
                     self._port
                     )
             self.log.debug(url_str)
-            resp = requests.post(url_str, data={'state' : state})
-            return resp.status_code == 200
+            resp = requests.post(url_str, json={'state' : state})
+            return resp.status_code in [200, 201]
         except:
             self.log.exception('Failed to set state.')
             return False
@@ -98,12 +98,12 @@ class DeviceManager:
                     self._address,
                     self._port
                     ),
-                data={
+                json={
                     'chunk_id' : chunk_id,
                     'state'    : 'crawled'
                     }
                 )
-        return resp.status_code == 200
+        return resp.status_code in [200, 201]
 
     def mark_link_crawled(self,link, success):
         """
@@ -121,5 +121,5 @@ class DeviceManager:
                     self._address,
                     self._port
                     ),
-                data={'link' : link, 'state' : state}
+                json={'link' : link, 'state' : state}
                 )
