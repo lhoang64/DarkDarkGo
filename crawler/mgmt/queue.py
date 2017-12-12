@@ -35,7 +35,10 @@ class QueueWrapper:
                 )
 
         links = resp.json()['links']
-        c_id = resp.json()['chunk_id']
+        if 'chunk_id' in resp.json():
+            c_id = resp.json()['chunk_id']
+        else:
+            c_id = None
 
         return (links, c_id)
 
