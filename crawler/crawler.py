@@ -91,7 +91,7 @@ class Crawler:
         if spider.success:
             self._create_document(
                 link,
-                spider.html,
+                spider.body,
                 spider.title
             )
             return spider.links
