@@ -30,7 +30,8 @@ class Chunk:
         if os.path.exists(self.path):
             with open(self.path, 'ab') as f:
                 for document in self.documents:
-                    f.write(document['doc_header'])
+                    for item in document['doc_header']:
+                        f.write(item)
                     f.write(document['doc_data'])
         else:
             raise Exception('Chunk does not exist')

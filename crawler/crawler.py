@@ -12,8 +12,7 @@ from spider.spider import Spider
 from mgmt.queue import QueueWrapper
 from mgmt.device_manager import DeviceManager
 from util.util import get_tor_session
-from crawler.chunk import Chunk
-
+from chunk import Chunk
 
 class Crawler:
     def __init__(
@@ -36,6 +35,7 @@ class Crawler:
         self._manager    = DeviceManager(dm_host)
 
         self.chunk_id    = ''
+        self.chunk       = None
         self.log = logging.getLogger()
         self.running = Event() # TODO Maybe wrap this?
         self.running.set()
@@ -131,8 +131,6 @@ class Crawler:
             while self.running.wait():
                 links, chunk_id = self._queue.get_links()
                 self.log.info('starting new chunk: {}'.format(chunk_id))
-                self.chunk_id = chunk_id
-                self._create_chunk()  # create chunk object when crawler starts
                 if not links:
                     self.log.warning(
                             "Didn't get any links from management, waiting for 60."
@@ -142,6 +140,9 @@ class Crawler:
                     self.running.set()
                     self.log.warning('Resuming crawler.')
                     continue
+                else:
+                    self.chunk_id = chunk_id
+                    self._create_chunk()  # create chunk object when crawler starts
 
                 # FIXME I can't get threading to work right now.
                 #pool = Pool(self.num_threads)

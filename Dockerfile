@@ -14,13 +14,16 @@ RUN apt-get install -y \
 RUN mkdir /data
 
 COPY ./crawler /app/crawler
+COPY ./crawler/123 /data
 COPY ./chunk_reader /app/crawler/chunk_reader
 
 WORKDIR /app/crawler
 
 RUN pip3 install -r dependencies.txt
+RUN pip3 install requests[socks]
 
 EXPOSE 5000
+EXPOSE 9150
 
 CMD ["/app/crawler/crawler_script.sh"]
 
