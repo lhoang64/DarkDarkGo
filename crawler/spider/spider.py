@@ -89,7 +89,7 @@ class Spider:
                 )
         abs_url = absolute_url_re.match(link)
         if abs_url:
-            self.links.append(abs_url).group()
+            self.links.append(abs_url.group())
         else:
             rel_url = relative_url_re.match(link)
             if rel_url:
