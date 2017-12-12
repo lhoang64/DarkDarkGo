@@ -21,7 +21,9 @@ export default class LandingPage extends Component {
   }
 
   handleSearch = () => {
-    const query = this.state.query;
+    if (this.state.query.length < 1)
+      return
+    const query = this.state.query
     this.props.history.push({
       pathname: '/search',
       search: '?q=' + query,
