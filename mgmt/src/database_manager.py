@@ -465,9 +465,9 @@ class DatabaseManager():
         except Exception as e:
             print(e)
 
-    def delete_relation(self, relation_name):
+    def clear_relation(self, relation_name):
         """
-        Delete a given relation.
+        Clear all records for a given relation
         :param relation_name: Relation name
         :return: None
         """
