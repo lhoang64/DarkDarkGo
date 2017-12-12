@@ -6,7 +6,7 @@
     Date: 12/3/2017
 """
 
-from mgmt.src.database_manager import DatabaseManager
+from database_manager import DatabaseManager
 from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)

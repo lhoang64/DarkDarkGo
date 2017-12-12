@@ -19,13 +19,19 @@ RUN apt-get update && apt-get install -y \
 	apt-get clean
 
 
+# Install dependencies
+RUN pip install --upgrade pip
+RUN pip install -I flask==0.12.0
+RUN pip install psycopg2
+
 USER postgres
 
 # Create a PostgreSQL role named ``docker`` with ``docker`` as the password and
 # then create a database `docker` owned by the ``docker`` role.
 RUN    /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
-    createdb -O docker docker
+    createdb -O postgres mgmt_db
+
+#    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
 
 # Adjust PostgreSQL configuration so that remote connections to the
 # database are possible.
@@ -35,17 +41,14 @@ RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.co
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 
 
-# Install dependencies
-RUN pip install --upgrade pip
-RUN pip install -I flask==0.12.0
-RUN pip install psycopg2
-
-# Add working directory ???
+# Add working directory
 ADD . /src
 WORKDIR /src
 
 EXPOSE 5000
 
+# Note: PostgresQL run on port 5432
+
 ENV FLASK_APP=device_manager_server.py
 
-CMD /usr/local/bin/flask run --host=0.0.0.0
+CMD /etc/init.d/postgresql start && sleep 5 && /usr/local/bin/flask run --host=0.0.0.0

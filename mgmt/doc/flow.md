@@ -135,7 +135,7 @@ Index Server `/get_chunks`. We return **5** chunks each time:
 
 *Note: SQL Database makes sense here because it's very easy to map and lookup for 
 Crawler's host, Index Builder's host, and Index Server's host, given chunk_id.
-More in [SQL Schema Doc](../database/README.md).*
+More in [SQL Schema Doc](../src/database/README.md).*
 
 Index Server might also want to send MGMT query stats at `/send_query_stats`. 
 Maybe something like:

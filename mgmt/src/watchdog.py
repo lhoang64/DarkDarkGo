@@ -7,8 +7,8 @@
     Date: 11/30/2017
 """
 from threading import Thread
-from mgmt.src.database_manager import DatabaseManager as db_manager
-from mgmt.src.constants import number_of_comps
+from database_manager import DatabaseManager as db_manager
+from constants import number_of_comps
 import requests
 import time
 

@@ -294,7 +294,7 @@ def test_get_first_n_crawled_chunk_ids():
     db_manager.operate_on_crawler_relation('INSERT', chunk_id='101c', host='101.101.101.101:101', task='crawled')
 
     # Test
-    result = db_manager.get_first_n_crawled_chunk_ids(1)
+    result = db_manager.get_first_n_crawled_chunks(1)
     if len(result) == 1:
         print('> PASSED | get_first_n_crawled_chunk_ids()')
     else:
@@ -324,43 +324,20 @@ def test_get_first_n_built_chunk_ids():
     db_manager.operate_on_host_relation('DELETE', host='101.101.101.101:101')
     db_manager.operate_on_index_builder_relation('DELETE', chunk_id='101c')
 
-def test_initial_setup():
-    """
-    Initial Setup:
-    - 25 crawled links, each belongs to 5 different chunk id from 1c to 5c
-    - 5 chunk ids
-    - 1 Crawler
-    - 1 Index Builder
-    - 10 Index Server
-    :return: None
-    """
-    db_manager = DatabaseManager()
+def read_file(filename):
+    with open(filename, 'r') as input_file:
+        links = []
+        lines = input_file.readlines()
+        for line in lines:
+            link = line.split('/', 3)[:3]
+            link_1 = '/'.join(link).split('\n')[0]
+            links.append(link_1)
 
-    if len(db_manager.get_relation('link')) == 25:
-        print("> PASSED | 25 Links")
-    else:
-        print("> FAILED | 25 Links")
-
-    if len(db_manager.get_relation('chunk')) == 5:
-        print("> PASSED | 5 Chunk IDs")
-    else:
-        print("> FAILED | 5 Chunk IDs")
-
-    if len(db_manager.get_all_crawlers()) == 1:
-        print("> PASSED | 1 Crawler")
-    else:
-        print("> FAILED | 1 Crawler")
-
-    if len(db_manager.get_all_index_builders()) == 1:
-        print("> PASSED | 1 Index Builder")
-    else:
-        print("> FAILED | 1 Index Builder")
-
-    if len(db_manager.get_all_index_servers()) == 10:
-        print("> PASSED | 10 Index Servers")
-    else:
-        print("> FAILED | 10 Index Servers")
-
+        # links.append(line)
+        # while line:
+            # line = input_file.readline()
+            # links.append(line)
+        return links
 
 if __name__ == '__main__':
     """
@@ -379,9 +356,53 @@ if __name__ == '__main__':
     test_get_first_n_pending_links()
     test_get_first_n_crawled_chunk_ids()
     test_get_first_n_built_chunk_ids()
-    test_initial_setup()
 
     db_manager = DatabaseManager()
+
+    # pprint(db_manager.get_relation_length('link'))
+    #
+    # links_to_add = read_file(filename="/Users/hoanhan/ds-class/final-project-dev/mgmt/test/links.txt")
+    # for link in links_to_add:
+    #     db_manager.operate_on_link_relation('INSERT', link=link)
+
+    # pprint(links_to_add)
+
+    # pprint(db_manager.get_relation('link'))
+
+
     # results = db_manager.find_chunk_ids_for_index_servers('3.0.0.1')
-    results = db_manager.get_relation('index_server')
-    pprint(results)
+    # pprint(db_manager.get_relation('index_server'))
+    # pprint(db_manager.get_all_index_servers())
+    # temp_dict = []
+    #
+    # for i in range(3):
+    #     temp_dict.append([])
+    #
+    # for index_server in db_manager.get_all_index_servers():
+    #     index_server_host = index_server['host']
+    #     result = db_manager.get_chunk_ids_for_index_server(host=index_server_host)
+    #     if len(result) != 0:
+    #         temp_dict[result['row'] - 1].append({"host": result["host"], "chunk_ids": result["chunk_ids"]})
+    #
+    # pprint(temp_dict)
+
+    # results = db_manager.get_first_n_pending_links(5)
+    # results = db_manager.get_relation('link')
+    # pprint(db_manager.get_chunk_id_for_link('https://www.example_5_2c.com')[0]['chunk_id'])
+    # pprint(db_manager.get_first_n_pending_links(1)[0]['link'])
+    # pprint(db_manager.get_first_n_crawled_chunk_ids(5))
+    # pprint(db_manager.get_links_for_chunk_id('1c'))
+
+    # pprint(db_manager.get_first_n_crawled_chunks(5))
+
+    # pprint(db_manager.get_relation_length('host'))
+
+    # db_manager.operate_on_host_relation('INSERT', host='34.238.164.24', type='Front-End')
+    # db_manager.operate_on_host_relation('INSERT', host='34.238.158.41', type='Back-End')
+    # db_manager.operate_on_host_relation('INSERT', host='52.90.210.211', type='Crawler')
+    # db_manager.operate_on_host_relation('INSERT', host='54.174.171.194', type='Index Builder')
+    # db_manager.operate_on_host_relation('INSERT', host='34.229.242.227', type='Index Server')
+    # db_manager.operate_on_host_relation('INSERT', host='54.159.82.218', type='MGMT')
+
+    pprint(db_manager.get_relation('link'))
+

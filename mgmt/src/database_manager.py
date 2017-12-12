@@ -11,8 +11,8 @@ import psycopg2.extras
 from psycopg2 import sql
 
 DATABASE = 'mgmt_db'
-USER = 'postgres'
-HOST = 'localhost'
+# USER = 'postgres'
+
 
 class DatabaseManager():
     def operate_on_link_relation(self, function, link, chunk_id=None, state='pending'):
@@ -28,7 +28,9 @@ class DatabaseManager():
         :return: None
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
+
+
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
@@ -58,7 +60,7 @@ class DatabaseManager():
         :return: None
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
@@ -88,7 +90,7 @@ class DatabaseManager():
         :return: None
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
@@ -120,7 +122,7 @@ class DatabaseManager():
         :return: None
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
@@ -152,7 +154,7 @@ class DatabaseManager():
         :return: None
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
@@ -186,7 +188,7 @@ class DatabaseManager():
         :return: None
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             if function == 'INSERT':
@@ -214,7 +216,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(sql.SQL("SELECT * FROM {} ORDER BY index").format(sql.Identifier(relation_name)))
             relation = cur.fetchall()
@@ -233,7 +235,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(sql.SQL("SELECT * FROM {} WHERE chunk_id = %s").format(sql.Identifier(relation_name)), [chunk_id])
             results = cur.fetchall()
@@ -274,7 +276,7 @@ class DatabaseManager():
         :return: Int
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(relation_name)))
             result = cur.fetchall()
@@ -290,7 +292,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT link FROM link WHERE chunk_id IS NULL AND state = 'pending' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
@@ -306,7 +308,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM crawler WHERE c_task = 'crawled' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
@@ -322,7 +324,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT chunk_id FROM index_builder WHERE ib_task = 'built' ORDER BY index LIMIT %s;", (number,))
             results = cur.fetchall()
@@ -337,7 +339,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM host WHERE type = 'Index Server';")
             results = cur.fetchall()
@@ -352,7 +354,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM host WHERE type = 'Index Builder';")
             results = cur.fetchall()
@@ -367,7 +369,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM host WHERE type = 'Crawler';")
             results = cur.fetchall()
@@ -383,7 +385,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM index_server WHERE is_host = %s;", (host,))
             results = cur.fetchall()
@@ -409,7 +411,7 @@ class DatabaseManager():
         :return: Link as a dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT chunk_id FROM link WHERE link = %s;", (link,))
             result = cur.fetchall()
@@ -425,7 +427,7 @@ class DatabaseManager():
         :return: List of dictionary
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT link FROM link WHERE chunk_id = %s AND state = 'crawling';", (chunk_id,))
             result = cur.fetchall()
@@ -441,7 +443,7 @@ class DatabaseManager():
         :return: Dictionary of index server host and its chunk ids
         """
         try:
-            conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}'".format(DATABASE, USER, HOST))
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
             cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT * FROM index_server WHERE is_host = %s;", (host,))
             results = cur.fetchall()

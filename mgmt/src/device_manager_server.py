@@ -8,8 +8,8 @@
 """
 
 from flask import Flask, request, jsonify
-from mgmt.src.utils import *
-from mgmt.src.constants import number_of_links, \
+from utils import *
+from constants import number_of_links, \
     number_of_chunks, \
     number_of_rows
 
@@ -21,6 +21,14 @@ rows = distribute_index_servers()
 """
     Internal Endpoints
 """
+
+@app.route('/', methods=['GET'])
+def hello_world():
+    """
+    Hello World message.
+    :return:
+    """
+    return jsonify(message="Hello World!")
 
 
 @app.route('/get_relation/<string:relation_name>', methods=['GET'])
@@ -118,7 +126,7 @@ def get_links():
             db_manager.operate_on_link_relation('UPDATE_CHUNK_ID',
                                                 link=link,
                                                 chunk_id=chunk_id)
-        return jsonify(links=links)
+        return jsonify(chunk_id=chunk_id, links=links)
     else:
         return jsonify(links=[])
 
