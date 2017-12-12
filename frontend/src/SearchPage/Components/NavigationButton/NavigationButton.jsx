@@ -8,12 +8,10 @@ export default (props) => {
         // Return Next button
         return (
         <div className="offsetButtons">
-            <button className="nextButton" onClick={()=>props.changeOffsetBy(1)}>
-                Next
-            </button>
+            <NextButton className="nextButton" onClick={()=>props.changeOffsetBy(1)} />                    
         </div>
         )
-    } 
+    }
     // Return both Next and Prev button
     return (
     <div className="offsetButtons">
