@@ -4,7 +4,7 @@ let Manager = require('./Management/Manager.js');
 
 let app = express();
 
-const port = process.env.NODE_PORT || 8010;
+const port = process.env.NODE_PORT || 5000;
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 routes(app);
 
 app.listen(port, ()=>{
-    Manager.start(app);
+    Manager.start();
     console.log('Backend server active on port ' + port);
 });
 
