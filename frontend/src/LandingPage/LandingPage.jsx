@@ -34,7 +34,7 @@ export default class LandingPage extends Component {
   changeQuery = (val) => {
     this.setState(
       () => {
-        return {query: val}
+        return {query: val.toLowerCase()}
       }, () => {
         //Prefetch and display suggestions
         if (val.length > 0) {
