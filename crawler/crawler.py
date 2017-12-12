@@ -130,7 +130,6 @@ class Crawler:
         try:
             while self.running.wait():
                 links, chunk_id = self._queue.get_links()
-                self.log.info('starting new chunk: {}'.format(chunk_id))
                 if not links:
                     self.log.warning(
                             "Didn't get any links from management, waiting for 60."
@@ -141,6 +140,7 @@ class Crawler:
                     self.log.warning('Resuming crawler.')
                     continue
                 else:
+                    self.log.info('starting new chunk: {}'.format(chunk_id))
                     self.chunk_id = chunk_id
                     self._create_chunk()  # create chunk object when crawler starts
 
