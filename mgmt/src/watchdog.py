@@ -7,7 +7,7 @@
     Date: 11/30/2017
 """
 from threading import Thread
-from database_manager import DatabaseManager as db_manager
+from database_manager import DatabaseManager
 from constants import number_of_comps
 import requests
 import time
@@ -31,8 +31,8 @@ class WatchDog(Thread):
                 component_url = 'http://{0}/{1}'.format(host, 'get_health')
                 try:
                     r = requests.get(component_url)     # hit get_health endpoint on every component
-                                                        # returns {'health':health_status}
-                    requests.post(dm_url, json={'host': host, 'health': r['health']})
+                                                        # returns {'status':health_status}
+                    requests.post(dm_url, json={'host': host, 'status': r['status']})
                 except:
                     print('error connecting to host...')
                 time.sleep(2)
@@ -47,6 +47,7 @@ class WatchDog(Thread):
 def main():
     thread_count = 0
     dm = '0.0.0.0:5000'
+    db_manager = DatabaseManager()
     host_relation = db_manager.get_relation('host')
 
     j = 0
