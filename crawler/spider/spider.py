@@ -82,7 +82,7 @@ class Spider:
 
     def _add_link(self, link):
         absolute_url_re = re.compile(
-                '^\b(http|https):\/\/[A-Za-z0-9]*.onion\/[A-Za-z0-9\/\-._]*'
+                '^(http|https):\/\/[A-Za-z0-9]*.onion\/[A-Za-z0-9\/\-._]*'
                 )
         relative_url_re = re.compile(
                 '^\/[A-Za-z0-9\/\-._]*'
