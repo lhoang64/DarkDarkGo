@@ -2,7 +2,9 @@ import React from 'react'
 import Loader from './Components/PacManLoader'
 import Suggestions from './Components/Suggestions/Suggestion'
 import NavigationButton from './Components/NavigationButton/NavigationButton'
-
+import logoStatic from './Components/skull_only.png'
+// import logoStatic from '../LandingPage/skull.png'
+import {Link} from 'react-router-dom'
 import './SearchPage.css'
 
 let queryParser = require('./utils/utils.js')
@@ -20,6 +22,8 @@ export default class SearchPage extends React.Component {
             searchOffset : 0,
             searching: true,
             suggestions: [],
+            totalPossibleResults: 0,
+            timeTaken: 0,
             error: ""
         }
     }
@@ -29,35 +33,43 @@ export default class SearchPage extends React.Component {
             const url = window.location.href
             let query = queryParser.getQueryString('q',url)
             query = query.replace(/[|&;$@"<>()+,]/g, " ").replace(/%20/g,' ')
-            const offset = parseInt(queryParser.getQueryString('offset',url))
+            let offset = parseInt(queryParser.getQueryString('offset',url), 10)
+            if (isNaN(offset))
+                offset = 0
             this.setState(() => {
-                return {query: query, searchOffset: offset}
-            }, this.search(query, offset));
+                return {query: query.toLowerCase(), searchOffset: offset}
+            }, this.search)
         } else {
             this.setState(() => {
-                return {query: this.props.location.state.query}
-            }, this.search(this.props.location.state.query));
+                return {query: this.props.location.state.query.toLowerCase()}
+            }, this.search)
         }
         const el = document.getElementById("search-box")
         if (el) el.focus()        
     }
     
-    search = (query, offset) => {
-        fetch(API_SERVER_QUERY_ENDPOINT + query + "&offset=" + offset)
-        .catch(()=>{
-            this.setState({error: "Sorry, we couldn't contact the backend server. Either your computer is not connected to the Internet or our backend server is offline."})
-        })
-        .then((response) => response.json())
-        .catch(() => {if (this.state.error.length === 0) this.setState({error: "Sorry, our backend server has gone berserk. Instead of returning json, they did something else. Email them at sashankaryal@bennington.edu."})})
-        .then((responsejson) => this.parseResult(responsejson))
-        .catch((error) => console.error(error));
+    search = () => {
+        if (this.state.query.length < 1)
+            return
+        fetch(API_SERVER_QUERY_ENDPOINT + this.state.query + "&offset=" + this.state.searchOffset)
+            .catch(() => {
+                this.setState({ error: "Sorry, we couldn't contact the backend server. Either your computer is not connected to the Internet or our backend server is offline." })
+            })
+            .then((response) => response.json())
+            .catch(() => { if (this.state.error.length === 0) this.setState({ error: "Sorry, our backend server has gone berserk. Instead of returning json, they did something else. Email them at sashankaryal@bennington.edu." }) })
+            .then((responsejson) => { if (this.state.error.length === 0) this.parseResult(responsejson) })
+            .catch((error) => console.error(error))
     }
+
 
     parseResult = (responsejson) => {
         if (responsejson.head === 'success') {
             this.setState((prevState, prevProps) => {
+                console.log(responsejson)
                 return {
+                    totalPossibleResults : responsejson.totalResults,
                     searchResults: responsejson.message,
+                    timeTaken: responsejson.timetaken,
                     searching: false
                 }
             })
@@ -72,7 +84,7 @@ export default class SearchPage extends React.Component {
             return
         this.setState(
             () => {
-              return {query: val}
+              return {query: val.toLowerCase()}
             }, () => {
               //Prefetch and display suggestions
               if (val.length > 0) {
@@ -89,8 +101,10 @@ export default class SearchPage extends React.Component {
     }
 
     handleSearch = () => {
+        if (this.state.query.length < 1)
+            return
         this.props.history.push('/search?q='+this.state.query)
-        this.search(this.state.query)
+        this.search()
     }
 
     changeOffsetBy = (offset) => {
@@ -98,7 +112,7 @@ export default class SearchPage extends React.Component {
             return {searchOffset: prevState.searchOffset + offset}},
             () => {
                 this.props.history.push('/search?q='+this.state.query + '&offset=' + this.state.searchOffset)
-                this.search(this.state.query, this.state.offset)
+                this.search()
             }
         )
     }
@@ -106,7 +120,7 @@ export default class SearchPage extends React.Component {
     render() {
         const searchResultsHtml = this.state.searchResults.map((result, index) => {
             return (
-                <div key={result.href} className={"resultblock_" + index + " results"}>
+                <div key={result.rank} className={"resultblock_" + index + " results"}>
                     <div className="resulttitle">
                         <a className="searchlink" href={result.href}>
                             {result.title}
@@ -134,11 +148,20 @@ export default class SearchPage extends React.Component {
         
         if (!this.state.searching) {
             return <div id="searchpage">
-                    <div className="search-bar">
-                        <input id="search-box" onKeyPress={(e)=>{if (e.key === 'Enter') this.handleSearch()}} onChange={(e)=>{this.changeQuery(e.target.value)}} placeholder="Search the dark net" value={this.state.query}/>
+                    <div className="logoandbar">
+                        <Link to="/">
+                            <img src={logoStatic} className="searchBarLogo" alt="logoStatic" />
+                        </Link>
+                        <div className="search-bar">
+                            <input id="search-box" onKeyPress={(e)=>{if (e.key === 'Enter') this.handleSearch()}} onChange={(e)=>{this.changeQuery(e.target.value)}} placeholder="Search the dark net" value={this.state.query}/>
+                            <Suggestions className="suggestions" suggestions={suggestions} />
+                        </div>
                     </div>
 
-                    <Suggestions className="suggestions_one" suggestions={suggestions} />
+
+                    <div className="whitetext searchresultsnum">
+                        {this.state.totalPossibleResults} results found in {parseFloat(this.state.timeTaken, 10) / 1000.0} seconds
+                    </div>
 
                     <div className="searchresults">
                         {searchResultsHtml}
