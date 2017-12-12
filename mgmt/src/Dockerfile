@@ -51,4 +51,4 @@ EXPOSE 5000
 
 ENV FLASK_APP=device_manager_server.py
 
-CMD /etc/init.d/postgresql start && sleep 5 && /usr/local/bin/flask run --host=0.0.0.0
+CMD /etc/init.d/postgresql start && sleep 5 && /usr/local/bin/flask run --host=0.0.0.0 && watchdog.py
