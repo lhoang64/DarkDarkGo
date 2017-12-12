@@ -1,2 +1,4 @@
-cacheddata.txt
+cachedata.txt
 node_modules
+../webserver-test/
+webserver-test
