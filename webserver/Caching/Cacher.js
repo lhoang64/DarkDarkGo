@@ -23,6 +23,8 @@ Cacher.initializeCache = () => {
         Cacher.cacheInitialized = true
         console.log("Cacher successfully initialized")
     }
+
+    Cacher.intervalid = setInterval(Cacher.dumpCacheToPersistenceAsync, 1000*30)
 }
 
 Cacher.addToCache = (queryString, snippet) => {
@@ -30,8 +32,22 @@ Cacher.addToCache = (queryString, snippet) => {
     Cacher.cache.set(queryString, snippet)
 }
 
-Cacher.dumpCacheToPersistence = () => {
+Cacher.dumpCacheToPersistenceSync = () => {
+    /*
+    To do: Only dump if any changes have been made, and instead of rewriting, only write the change stream
+    */
     const dump = JSON.stringify(Cacher.cache.dump())
     fs.writeFileSync("cachedata.txt", dump)
-    console.log("Exiting cacher.\nCache successfully dumped to persistence.\n\n")
+    console.log("\nCache successfully dumped to persistence because of SIGINT or SIGTERM.\n\n")
+}
+
+Cacher.dumpCacheToPersistenceAsync = () => {
+    /*
+        To do: Only dump if any changes have been made, and instead of rewriting, only write the change stream
+    */
+    const dump = JSON.stringify(Cacher.cache.dump())
+    fs.writeFile("cachedata.txt", dump, 'utf-8', (err)=>{
+        if (err) console.log("Async cache save failed.")
+        else console.log(Date.now() + " : Cache successfully dumped to persistence aysnc-ally.\n\n")
+    })
 }

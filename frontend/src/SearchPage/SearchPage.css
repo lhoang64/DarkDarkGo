@@ -19,7 +19,7 @@
 
 .searchlink {
     text-decoration: none;
-    color: rgb(34, 208, 54);
+    color: #e0d200;
 }
 
 .searchlink:hover {
@@ -31,9 +31,9 @@
 }
 
 .searchresults {
-    margin-left: 10vw;
-    margin-right: 30vw;
-    margin-top: 3em;
+    margin-left: 20vw;
+    margin-right: 25vw;
+    margin-top: 2em;
     margin-bottom: 3em;
 }
 
@@ -41,6 +41,99 @@
     margin-bottom: 2em;
 }
 
+.resulttitle {
+    margin-bottom: 2px;
+}
+#searchpage {
+    display: flex;
+    flex-direction: column;
+}
+
 #searchpage > .search-bar > #search-box {
     margin-left: 10vw;
+}
+
+.suggestions {
+    list-style-type: none;
+    margin-top: 1px;
+    width: 39%;
+    border-radius: 4px;
+    padding: 0 0 10px 10px;
+    max-width: 900px;
+    background-color: #ffffff; 
+}
+
+.suggestion {
+    height: 0.5em;
+    padding: 10px 0 10px 10px;
+    color: #5d9062;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.offsetButtons{
+    margin-bottom: 8em;    
+}
+
+.previousButton {
+    color: white;
+    font-size: 3em;
+    margin-left: 1em;
+    cursor: pointer;
+}
+
+.previousButton:hover {
+    transform: scale(1.1,1.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.nextButton {
+    color: white;
+    right: 20vw;
+    font-size: 3em;
+    position: absolute;
+    cursor: pointer;
+}
+
+
+.nextButton:hover {
+    transform: scale(1.1,1.2);
+    transition: all 0.2s ease-in-out;
+}
+
+
+.searchBarLogo {
+    width: 100px;
+}
+
+#searchpage > div.search-bar > #search-box {
+    margin-top: 20px !important;
+}
+
+#searchpage > a {
+    margin-right: 100px;
+    margin-top: 30px;
+    margin-left: 20vw;
+}
+
+.searchresultsnum {
+    margin-left: 20vw;
+    margin-top: 2em;
+    font-size: 0.8em;
+}
+
+.logoandbar {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2em;
+    margin-left: 20vw;
+}
+
+#searchpage > div.logoandbar > div {
+    width: 100%;
+    margin-left: 1em;
+    margin-top: -3em;
 }

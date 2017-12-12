@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "create-react-class": "^15.6.2",
+    "domkit": "0.0.1",
     "lru-cache": "^4.1.1",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
+    "react-icons": "^2.2.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17"
   },

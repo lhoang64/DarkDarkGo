@@ -1,38 +1,65 @@
-const Aggregator = require('../Aggregation/Aggregator');
-let Manager = require('../Management/Manager');
+const Aggregator = require('../Aggregation/Aggregator')
+const Cacher = require('../Caching/Cacher')
+let Manager = require('../Management/Manager')
 
-let test = 2
-
-
-/*
-/search?q=
-/getsnippetsfordocids {id : [2131-dfadsf, 323-afa]}
-
-
-*/
+let clock = require('./utils').clock
 
 exports.handleQuery = (req, res) => {
-    
+    let start = clock()
     const queryString = req.query.q
-    console.log("New query:", queryString)
+    const offset = req.query.offset
+    console.log("New query:" +  queryString)
 
     if (Manager.indexServers.empty || Manager.indexServers.map.length == 0 || Manager.indexServers.inversemap.length == 0) {
         returnError(res, "No index servers online")
     } else {
-        // Make a request to the index servers, aggregate and prepare snippets
+        Aggregator.getResultsFromIndexServer(queryString, offset, Manager.indexServers, (results, error) => {
+            if (error) {
+                returnError(res, error)
+            }
+            else {
+                console.log(Date.now() + " : Sent " + results.content.length + " results out of " + results.totalResult + " results.")
+                const duration = clock(start)
+                res.json({
+                    'head': 'success',
+                    'totalResults': results.totalResult,
+                    'timetaken': duration, 
+                    'message': results.content
+                })                
+            }
+        })}
+}
 
-        Aggregator.queryIndexServerForDocIds(req.query.q, (success, error) => {
-            
-        })
+exports.handleCacheSearch = (req, res) => {
+    const query = req.query.q
+    let ret = []
+    let candidates = []
+    const allKeys = Cacher.cache.keys()
 
+    if (allKeys.constructor === Array){
+        let count = 0
+        let candidateCount = 0
+        for (let key of allKeys) {
+            if (key.startsWith(query)){
+                ret.push(key)
+                count++
+            } else if (key.includes(query)) {
+                candidates.push(key)
+                candidateCount++
+            }
+            if (count == 5 || candidateCount == 5)
+                break
+        }
 
-        const results = Aggregator.queryIndexServerForDocIds(req.query.q)
-        if (!results.success) return returnError(res, "Index servers not working. Please contact the administrator.")
-        res.json({
-            head: 'success',
-            body: results.body
-        });
+        if (count < 6) {
+            ret = ret.concat(candidates)
+        }
+
+        res.send(ret)
+        // let ret = allKeys.filter((cachekey, index) => cachekey.startsWith(query))
+        return
     }
+    res.send([])
 }
 
 exports.handleHealth = (req, res) => {
@@ -49,23 +76,22 @@ exports.handleHealth = (req, res) => {
 /searchsnippets/:id
 */
 exports.fofhandler = (req, res) => {
-    res.send('Invalid request');
+    res.send('Invalid request')
 }
 
 returnError = (res, errormessage) => {
     res.json({
         head: 'error',
         message: errormessage
-    });
+    })
 }
 
 
-//For testing only
 // res.json({head: 'success',
 // message: 
 //     [
 //         {
-//             title: "How To Tie A Windsor Knot | Ties.com" + test++,
+//             title: "How To Tie A Windsor Knot | Ties.com",
 //             href: "https://www.ties.com/how-to-tie-a-tie/windsor",
 //             desc: "The Windsor Knot Tying Instructions. Start with the wide end of the tie on the right and the small end on the left. Wide end over the small end to the left. Up into the neck loop from underneath. Down to the left. Around the back of the small end to the right. Up to the center, towards neck loop."
 //         },
@@ -82,3 +108,12 @@ returnError = (res, errormessage) => {
 //     ]
 // }
 // )
+// const query = req.query.q    
+// if (!Cacher.cache.has(query)){
+//     let snippetwithids = {
+//         'query': query,
+//         'docids': {'1':'232'}
+//     }
+//     Cacher.addToCache(query, snippetwithids)
+// }
+// return
