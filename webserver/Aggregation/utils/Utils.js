@@ -1,21 +1,30 @@
+/**
+ * This module contains utility functions for aggregation class
+ */
+
+Object.filter = (obj, predicate) => 
+    Object.keys(obj)
+        .filter( key => predicate(obj[key]) )
+        .reduce( (res, key) => (res[key] = obj[key], res), {} );
+
 module.exports = {
-    getChunkIdsForDocIds: (docIdArr) => {
+    getChunkIdsForDocIds: (docIdObject) => {
+        docidArr = Object.values(docIdObject)
         let chunkIdArr = []
         for (let docid of docidArr) {
-            chunkIdArr.push(docid.id.split('-')[0])
+            chunkIdArr.push(docid.split('-')[1])
         }
         return chunkIdArr
     },
 
-    getDocIdInRange: (docIdArr, offset) => {
-        if (!offset)
-            return docIdArr.slice(0,10)
-        let index = offset * 10
-        if (docIdArr[index]) {
-            return docIdArr.slice(index, index + 10) 
-        }
-        return docIdArr.slice(-10)
+    getDocIdInRange: (docIdObject, offset) => {
+        const lowerBound = offset * 10
+        const upperBound = lowerBound + 10
+        if (docIdObject[lowerBound])
+            return Object.filter(docIdObject, rank > lowerBound && rank < upperBound)
+        return docIdObject
     },
+
     getIndexServersInRandomRow: (indexServersMap) => {
         let ret = []        
         const numRows = indexServersMap.length
