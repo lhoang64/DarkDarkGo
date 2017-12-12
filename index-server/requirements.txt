@@ -1,4 +1,4 @@
 requests==2.18.4
 nltk==3.2.5
 flask==0.12.2
-
+schedule==0.5.0
