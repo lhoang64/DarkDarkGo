@@ -42,6 +42,33 @@ def get_relation(relation_name):
     return jsonify(result)
 
 
+@app.route('/add_host', methods=['POST'])
+def add_host():
+   """
+   Add host data in host relation
+   JSON format:
+       [
+           {
+               'host': host_url,
+               'type': host_type.
+           }
+
+       ]
+   """
+   message = request.get_json()
+   for component in message:
+       db_manager.operate_on_host_relation('INSERT',
+                                           host=component['host'],
+                                           type=component['type'])
+
+
+@app.route('/clear_relation/<string:relation_name>', methods=['POST'])
+def clear_db(relation_name):
+    db_manager.clear_relation(relation_name=relation_name)
+    response = {'message': 'Successfully cleared the relation'}
+    return jsonify(response), 201
+
+
 """
     All Components' Endpoints
 """
