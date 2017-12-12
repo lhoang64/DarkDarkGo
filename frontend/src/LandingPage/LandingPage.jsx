@@ -4,7 +4,7 @@ import Suggestions from '../SearchPage/Components/Suggestions/Suggestion'
 
 import './LandingPage.css';
 
-const API_SERVER_CACHE_ENDPOINT = "http://localhost:8010/searchcache?q="
+const API_SERVER_CACHE_ENDPOINT = "http://34.238.158.41:80/searchcache?q="
 
 export default class LandingPage extends Component {
 
