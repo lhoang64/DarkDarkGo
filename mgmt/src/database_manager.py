@@ -464,3 +464,19 @@ class DatabaseManager():
             return temp_dict
         except Exception as e:
             print(e)
+
+    def delete_relation(self, relation_name):
+        """
+        Delete a given relation.
+        :param relation_name: Relation name
+        :return: None
+        """
+        try:
+            conn = psycopg2.connect("dbname='{0}'".format(DATABASE))
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute(sql.SQL("DELETE FROM {}").format(sql.Identifier(relation_name)))
+            cur.execute("ALTER SEQUENCE {0}_index_seq RESTART WITH 1;".format(relation_name))
+            conn.commit()
+            cur.close()
+        except Exception as e:
+            print(e)
