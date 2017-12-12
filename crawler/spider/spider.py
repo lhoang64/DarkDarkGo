@@ -87,10 +87,10 @@ class Spider:
         relative_url_re = re.compile(
                 '^\/[A-Za-z0-9\/\-._]*'
                 )
-        abs_url = absolute_url_re.match(link).group()
+        abs_url = absolute_url_re.match(link)
         if abs_url:
-            self.links.append(abs_url)
+            self.links.append(abs_url).group()
         else:
-            rel_url = relative_url_re.match(link).group()
+            rel_url = relative_url_re.match(link)
             if rel_url:
-                self.links.append(rel_url)
+                self.links.append(rel_url.group())
