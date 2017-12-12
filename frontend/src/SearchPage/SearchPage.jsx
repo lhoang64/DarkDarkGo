@@ -9,8 +9,8 @@ import './SearchPage.css'
 
 let queryParser = require('./utils/utils.js')
 
-const API_SERVER_QUERY_ENDPOINT = "http://localhost:8010/search?q=";
-const API_SERVER_CACHE_ENDPOINT = "http://localhost:8010/searchcache?q="
+const API_SERVER_QUERY_ENDPOINT = "http://34.238.158.41:80/search?q=";
+const API_SERVER_CACHE_ENDPOINT = "http://34.238.158.41:80/searchcache?q="
 
 export default class SearchPage extends React.Component {
     
