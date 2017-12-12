@@ -5,7 +5,7 @@ RUN apt-get update &&\
     apt-get -y install Nginx &&\
     apt-get -y install nano &&\
     apt-get -y install lsof &&\
-    apt-get install net-tools &&\
+    apt-get install net-tools
 COPY nginxconf /etc/nginx/sites-available
 RUN rm /etc/nginx/sites-available/default &&\
     rm /etc/nginx/sites-enabled/default &&\
