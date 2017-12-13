@@ -63,12 +63,13 @@ class Spider:
             return
 
         self.log.info('successfully connected to {}'.format(self.link))
-        self.body = resp.text
+        self.body = resp.text[0:509] # truncating html body to fix Overflow
         soup = BeautifulSoup(self.body, 'html.parser')
         try:
             self.title = soup.title.string
         except AttributeError:
             self.title = 'N/A'
+
         self._find_links(soup)
 
         self.log.info('Successfully spidered {}'.format(self.link))

@@ -80,7 +80,7 @@ class Chunk:
         """
         file_size = 0
         for document in self.documents:
-            file_size += len(document['doc_header']) + len(document['doc_data'])
+            file_size += 14 + len(document['doc_data'])
         doc_start_offset = file_size.to_bytes(3, byteorder='big')
         bin_doc_int = doc_int_value.to_bytes(1, byteorder='big')
         header_val = [bin_doc_int, doc_start_offset]
@@ -99,7 +99,7 @@ class Chunk:
         """
         file_size = 0
         for document in self.documents:
-            file_size += len(document['doc_header']) + len(document['doc_data'])
+            file_size += 14 + len(document['doc_data'])
 
         doc_header_length = 14
         doc_length = len(link) + len(title) + len(html)
