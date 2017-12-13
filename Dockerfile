@@ -9,7 +9,8 @@ RUN apt-get update -y
 RUN apt-get install -y \
     python3 \
     python3-pip \
-    tor
+    tor \
+    nano
 
 RUN mkdir /data
 
