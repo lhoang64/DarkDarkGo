@@ -42,24 +42,26 @@ def get_relation(relation_name):
     return jsonify(result)
 
 
-@app.route('/add_host', methods=['POST'])
-def add_host():
-   """
-   Add host data in host relation
-   JSON format:
-       [
-           {
-               'host': host_url,
-               'type': host_type.
-           }
-
-       ]
-   """
-   message = request.get_json()
-   for component in message:
-       db_manager.operate_on_host_relation('INSERT',
-                                           host=component['host'],
-                                           type=component['type'])
+@app.route('/add_hosts', methods=['POST'])
+def add_hosts():
+    """
+    Add host data in host relation
+    JSON format:
+    [
+        {
+            'host': host_url,
+            'type': host_type.
+        }
+    ]
+    :return:
+    """
+    message = request.get_json()
+    for component in message:
+        db_manager.operate_on_host_relation('INSERT',
+                                            host=component['host'],
+                                            type=component['type'])
+    response = {'message': 'Successfully added hosts'}
+    return jsonify(response), 201
 
 
 @app.route('/clear_relation/<string:relation_name>', methods=['POST'])
@@ -209,6 +211,7 @@ def add_links():
     if links['links']:
         for link in links['links']:
             db_manager.operate_on_link_relation('INSERT', link=link)
+
         response = {'message': 'Successfully added links to database'}
         return jsonify(response), 201
     else:
@@ -250,6 +253,7 @@ def set_content_chunk_state():
         db_manager.operate_on_crawler_relation('UPDATE_TASK',
                                                chunk_id=chunk_id,
                                                task='propagated')
+
         response = {'message': 'Successfully updated state to propagated'}
         return jsonify(response), 201
     else:
@@ -300,6 +304,8 @@ def set_index_chunk_state():
                                                      chunk_id=message['chunk_id'],
                                                      task=message['state'])
 
+        response = {'message': 'Successfully updated state to propagated'}
+        return jsonify(response), 201
     else:
         response = {'message': 'There is no state available'}
         return jsonify(response), 400
@@ -356,19 +362,23 @@ def get_map():
     index_servers = db_manager.get_all_index_servers()
 
     temp = []
-    for i in range(number_of_rows):
-        temp.append([])
-    for server in index_servers:
-        index_server_host = server['host']
+    try:
+        for i in range(number_of_rows):
+            temp.append([])
+        for server in index_servers:
+            index_server_host = server['host']
 
-        # Get chunk ids for a given Index Server's host
-        temp_dict = db_manager.get_chunk_ids_for_index_server(host=index_server_host)
+            # Get chunk ids for a given Index Server's host
+            temp_dict = db_manager.get_chunk_ids_for_index_server(host=index_server_host)
 
-        if len(temp_dict) != 0:
-            index = temp_dict['row'] - 1
-            temp[index].append({'host': temp_dict['host'],
-                                'chunk_id': temp_dict['chunk_ids']})
-    return temp
+            if len(temp_dict) != 0:
+                index = temp_dict['row'] - 1
+                temp[index].append({'host': temp_dict['host'],
+                                    'chunk_id': temp_dict['chunk_ids']})
+    except Exception as e:
+        temp = []
+        print(e)
+    return jsonify(temp)
 
 
 """
@@ -388,6 +398,11 @@ def set_health():
     db_manager.operate_on_host_relation('UPDATE_HEALTH',
                                         host=message['host'],
                                         health=message['status'])
+    db_manager.operate_on_host_relation('UPDATE_STATE',
+                                        host=message['host'],
+                                        state=message['state'])
+    response = {'message': 'Successfully updated health'}
+    return jsonify(response), 201
 
 
 if __name__ == '__main__':
