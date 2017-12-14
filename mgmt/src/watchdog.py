@@ -32,9 +32,14 @@ class WatchDog(Thread):
                 try:
                     r = requests.get(component_url)     # hit get_health endpoint on every component
                                                         # returns {'status':health_status}
-                    requests.post(dm_url, json={'host': host, 'status': r['status']})
+                    requests.post(dm_url, json={'host': host,
+                                                'status': r['status'],
+                                                'state': 'online'})
                 except:
-                    print('error connecting to host...')
+                    print('wd{0}: error connecting to host {1}'.format(self.thread_id, host))
+                    requests.post(dm_url, json={'host': host,
+                                                'status': 'error',
+                                                'state': 'offline'})
                 time.sleep(2)
             time.sleep(30)
 
