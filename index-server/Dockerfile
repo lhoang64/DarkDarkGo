@@ -2,10 +2,10 @@ FROM ubuntu:latest
 MAINTAINER Nayeem Aquib <nayeemaquib@bennington.edu>
 
 RUN apt-get clean && apt-get update && apt-get install -y \
-	curl \
 	python-dev \
 	python-setuptools \
 	python-pip \
+	nano\
 	--no-install-recommends && \
 	rm -rf /var/lib/apt/lists/* && \
 	apt-get clean

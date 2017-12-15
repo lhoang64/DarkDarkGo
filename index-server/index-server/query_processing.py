@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 """
     query_processing.py - Matches the query against the saved indexed chunks and returns a dictionary of {rank: "docID"}
     author: Nayeem Aquib
@@ -9,6 +9,8 @@
 """
 
 from nltk.tokenize import RegexpTokenizer
+
+
 import itertools
 
 from indexed_chunks import sample_indexed_chunks_dict

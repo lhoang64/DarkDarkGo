@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
 """
     idx_server.py -
     author: Nayeem Aquib
@@ -13,9 +13,18 @@ import schedule
 import requests
 from flask import Flask, jsonify, request
 from threading import Thread
+import os
+
 
 from query_processing import query_main
 from indexed_chunks import snippet_builder
+from read_chunk import get_chunk
+
+try:
+    os.makedirs("content_files")
+except OSError:
+    if not os.path.isdir("content_files"):
+        raise
 
 app = Flask(__name__)
 
@@ -24,6 +33,9 @@ s = requests.Session()
 mgmt_ip_addr = '54.159.82.218'
 index_builder_ip_addr = '54.174.171.194'
 crawler_ip_addr = '52.90.210.211'
+
+THE_IDX = {}
+content_chunk_list = []
 
 # For test
 @app.route('/', methods=['GET'])
@@ -49,18 +61,30 @@ def get_chunks():
     print(chunk_metadata)
     crawler_host_dict = {}
     ib_host_dict = {}
-    indexed_chunk = []
-    content_chunk = []
+    global content_chunk_list
 
     for item in chunk_metadata:
         crawler_host_dict[item['chunk_id']] = item['hosts']['c_host']
         ib_host_dict[item['chunk_id']] = item['hosts']['ib_host']
 
-    for k, v in ib_host_dict.items():
-        indexed_chunk.append(s.get('{1}/indexed_chunk/{0}'.format(k, v)))
-        content_chunk.append(s.get('{1}/content_chunk/{0}'.format(k, v)))
+    print("crawler_host_dict:{0}".format(crawler_host_dict))
+    print("ib_host_dict:{0}".format(ib_host_dict))
 
-    return (indexed_chunk, content_chunk)
+    for k, v in ib_host_dict.items():
+        json_file = requests.get('http://{1}:5000/indexed_chunk/indexed_{0}.json'.format(k, v))
+        THE_IDX.update(json_file.json()) # Saving to the main index as a dictionary
+        print("Index recorded for chunk: {0}".format(k))
+
+    for k, v in crawler_host_dict.items():
+        content_data = requests.get('http://{1}:5000/get_chunk/{0}'.format(k, v), stream=True)
+        with open("content_files/{0}".format(k), "wb") as f:
+            f.write(content_data.content)
+        f.close
+        print("Content file created for chunk: {0}".format(k))
+
+        content_chunk = get_chunk("content_files/{0}".format(k))
+        content_chunk_list += content_chunk
+
 
 
 # For front-end
