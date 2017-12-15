@@ -23,12 +23,14 @@ rows = distribute_index_servers()
 """
 
 @app.route('/', methods=['GET'])
-def hello_world():
+def distribute_rows():
     """
-    Hello World message.
+    Distribute index server into rows
     :return:
     """
-    return jsonify(message="Hello World!")
+    global rows
+    rows = distribute_index_servers()
+    return jsonify(message="{0} rows have been distributed!".format(len(rows)))
 
 
 @app.route('/get_relation/<string:relation_name>', methods=['GET'])
@@ -60,6 +62,8 @@ def add_hosts():
         db_manager.operate_on_host_relation('INSERT',
                                             host=component['host'],
                                             type=component['type'])
+        global rows
+        rows = distribute_index_servers()
     response = {'message': 'Successfully added hosts'}
     return jsonify(response), 201
 
@@ -338,13 +342,14 @@ def get_content_chunk():
         return jsonify([])
 
 
-@app.route("/get_chunks", methods=['GET'])
+@app.route("/get_chunks", methods=['POST'])
 def get_chunks():
     """
     Get the hosts of the content and index chunks assigned to an index server
     :return: List of dictionary of hosts, empty list if no chunks assigned
     """
-    requester = request.remote_addr
+    # requester = request.remote_addr
+    requester = request.get_json()['host']
 
     # Get all index servers for requester
     results = db_manager.get_chunk_hosts_for_index_servers(requester)
@@ -374,7 +379,7 @@ def get_map():
             if len(temp_dict) != 0:
                 index = temp_dict['row'] - 1
                 temp[index].append({'host': temp_dict['host'],
-                                    'chunk_id': temp_dict['chunk_ids']})
+                                    'chunk_ids': temp_dict['chunk_ids']})
     except Exception as e:
         temp = []
         print(e)
@@ -402,6 +407,16 @@ def set_health():
                                         host=message['host'],
                                         state=message['state'])
     response = {'message': 'Successfully updated health'}
+    return jsonify(response), 201
+
+
+@app.route("/get_health", methods=['GET'])
+def get_health():
+    """
+    Sets the health status for components; called by watchdogs
+    :return: None
+    """
+    response = {'status': 'healthy'}
     return jsonify(response), 201
 
 
