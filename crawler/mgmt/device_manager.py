@@ -1,9 +1,6 @@
 """
     Wrapper for the managment teams device manager endpoints.
     Nov, 27, 2017 - Matt Jones matthewjones@bennington.edu
-
-    NOTE: For now, this doesn't actually interact with the DM server,
-        it's just a dummy until the server is up.
 """
 
 import requests

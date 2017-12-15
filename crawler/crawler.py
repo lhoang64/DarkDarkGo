@@ -127,6 +127,10 @@ class Crawler:
         return chunks
 
     def run(self):
+        """
+        Starts a crawl. The crawler immidiatly requests links for the queue and
+            begins making requests to dark-net sites. This should only be called once.
+        """
         self.log.debug('crawler.run() called!')
         # TODO Find a more robust way of starting/stopping and keeping track.
         try:

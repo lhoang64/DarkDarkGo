@@ -75,10 +75,16 @@ def stop():
 
 @app.route('/get_chunks', methods=['GET'])
 def get_chunks():
+    """
+    Returns a JSON representation of the chunks stored on the crawler.
+    """
     chunks = read_chunk.get_chunks()
     resp = {'chunks': chunks}
     return jsonify(resp)
 
 @app.route('/get_chunk/<chunk_id>', methods=['GET'])
 def get_chunk(chunk_id):
+    """
+    Returns a chunk file corresponding to the requested chunk id.
+    """
     return send_from_directory(app.config['UPLOAD_FOLDER'], chunk_id)
