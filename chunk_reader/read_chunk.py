@@ -228,7 +228,7 @@ def get_raw_html(chunk_id, doc_id):
     try:
         with open(chunk_path, 'rb') as chunk:
             chunk.seek(chunk_map[doc_id])
-            chunk.seek(doc_id['html_start'], 1)
+            chunk.seek(doc_map['html_start'], 1)
             bin_data = chunk.read(doc_map['html_length'])
             html['html'] = bin_data.decode('utf-8')
         return html

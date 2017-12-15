@@ -26,6 +26,7 @@ class Spider:
         self.body        = ''
         self.title       = ''
         self.links       = []
+        self.html        = ''
 
         self.log = logging.getLogger()
 
@@ -63,7 +64,8 @@ class Spider:
             return
 
         self.log.info('successfully connected to {}'.format(self.link))
-        self.body = resp.text[0:509] # truncating html body to fix Overflow
+        self.body = resp.text
+        self.html = resp.text[0:509]
         soup = BeautifulSoup(self.body, 'html.parser')
         try:
             self.title = soup.title.string

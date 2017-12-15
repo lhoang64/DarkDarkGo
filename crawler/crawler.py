@@ -92,7 +92,7 @@ class Crawler:
         self._create_document(
             link,
             spider.title,
-            spider.body
+            spider.html
         )
         self._manager.mark_link_crawled(link, spider.success)
         if spider.success:
