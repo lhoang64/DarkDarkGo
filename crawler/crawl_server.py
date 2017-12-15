@@ -63,6 +63,15 @@ def get_chunk():
 def is_crawling():
     return jsonify(crawler.running.is_set())
 
+@app.route('/get_health')
+def get_health():
+    if crawler.running.is_set():
+        resp = {'status': 'healthy'}
+        return jsonify(resp)
+    else:
+        resp = {'status': 'failure'}
+        return jsonify(resp)
+    
 @app.route('/crawl', methods=['POST'])
 def crawl():
     crawler.running.set()
