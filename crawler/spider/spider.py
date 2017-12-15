@@ -26,6 +26,7 @@ class Spider:
         self.body        = ''
         self.title       = ''
         self.links       = []
+        self.html        = ''
 
         self.log = logging.getLogger()
 
@@ -64,11 +65,17 @@ class Spider:
 
         self.log.info('successfully connected to {}'.format(self.link))
         self.body = resp.text
+        self.html = resp.text[0:509]
         soup = BeautifulSoup(self.body, 'html.parser')
-        self.title = soup.title
+        try:
+            self.title = soup.title.string
+        except AttributeError:
+            self.title = 'N/A'
+
         self._find_links(soup)
 
         self.log.info('Successfully spidered {}'.format(self.link))
+        self.log.debug('Scraped data: {0}| {1}| {2}'.format(self.title, len(self.title), self.body[0:50]))
         self.log.debug('Found {} links.'.format(len(self.links)))
 
     def _dead_link(self, status_code=None):

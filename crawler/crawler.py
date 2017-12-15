@@ -87,13 +87,15 @@ class Crawler:
                 get_tor_session(9150)
                 )
         spider.crawl()
+        self.log.debug(
+            'Creating document for: {0}, title {1}, body: {2}'.format(link, spider.title, spider.body[0::50]))
+        self._create_document(
+            link,
+            spider.title,
+            spider.html
+        )
         self._manager.mark_link_crawled(link, spider.success)
         if spider.success:
-            self._create_document(
-                link,
-                spider.body,
-                spider.title
-            )
             return spider.links
         else:
             return []
@@ -143,6 +145,7 @@ class Crawler:
                     self.log.info('starting new chunk: {}'.format(chunk_id))
                     self.chunk_id = chunk_id
                     self._create_chunk()  # create chunk object when crawler starts
+                    self.log.debug('Chunk {0} created, path to chunk {1}'.format(self.chunk.chunk_id, self.chunk.path))
 
                 # FIXME I can't get threading to work right now.
                 #pool = Pool(self.num_threads)
@@ -154,9 +157,12 @@ class Crawler:
 
                 # The following line is an affront to god.
                 fresh_links = [link for sublist in mulit_list for link in sublist]
+                self.log.debug('Attempting to append documents to file: {0}'.format(len(self.chunk.documents)))
+                self.log.debug('Attempting to append header {0} to file'.format(self.chunk.header))
                 self._add_to_chunk()
                 self._queue.add_links(fresh_links)
-                self._manager.alert_chunk(chunk_id)
+                self._manager.alert_chunk(self.chunk_id)
+                self.log.debug('Alerted management of chunk {0}'.format(self.chunk_id))
         except:
             self.log.exception('Uncaught error in crawler, stopping.')
-            # TODO: Tell mgmt that we hit an error.
+            self._manager.send_error()
