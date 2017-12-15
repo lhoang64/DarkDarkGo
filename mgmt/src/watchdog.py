@@ -28,7 +28,7 @@ class WatchDog(Thread):
         dm_url = 'http://{0}/{1}'.format(self.dm, 'set_health')
         while len(self.hosts) > 0:
             for host in self.hosts:
-                component_url = 'http://{0}/{1}'.format(host, 'get_health')
+                component_url = 'http://{0}:5000/{1}'.format(host, 'get_health')
                 try:
                     r = requests.get(component_url)     # hit get_health endpoint on every component
                                                         # returns {'status':health_status}
