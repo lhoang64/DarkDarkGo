@@ -80,6 +80,7 @@ class Spider:
             self.title = 'N/A'
 
         self._find_links(soup)
+        self.success = True
 
         self.log.info('Successfully spidered {}'.format(self.link))
         self.log.debug('Scraped data: {0}| {1}| {2}'.format(self.title, len(self.title), self.body[0:50]))
