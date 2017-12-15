@@ -46,8 +46,6 @@ app = Flask(__name__)
 UPLOAD_FOLDER = '/data'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.run(port=args.port)
-
 '''
 @app.route('/get_chunks')
 def get_chunks():
@@ -65,6 +63,15 @@ def get_chunk():
 def is_crawling():
     return jsonify(crawler.running.is_set())
 
+@app.route('/get_health')
+def get_health():
+    if crawler.running.is_set():
+        resp = {'status': 'healthy'}
+        return jsonify(resp)
+    else:
+        resp = {'status': 'failure'}
+        return jsonify(resp)
+    
 @app.route('/crawl', methods=['POST'])
 def crawl():
     crawler.running.set()
@@ -88,3 +95,6 @@ def get_chunk(chunk_id):
     Returns a chunk file corresponding to the requested chunk id.
     """
     return send_from_directory(app.config['UPLOAD_FOLDER'], chunk_id)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=args.port)
