@@ -48,6 +48,13 @@ class Spider:
             self.log.exception('What?')
             self.spider_err = True
             return
+        except exceptions.ConnectionError as conn_err:
+            self.log.warning(
+                    'Request to {} denied, marking as dead.'
+                    .format(self.link)
+                    )
+            self._dead_link()
+            return
         except exceptions.Timeout as to_err:
             self.log.warning(
                     'Request to {} timed out, marking as dead.'
